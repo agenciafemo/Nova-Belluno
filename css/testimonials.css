@@ -32,30 +32,14 @@
 }
 
 .testimonials__quote {
-  overflow: hidden;
-  display: grid;
-  grid-template-rows: minmax(190px, auto) auto;
+  padding: clamp(28px, 4vw, 48px);
   border-radius: var(--radius-md);
   background: var(--color-beige-soft);
   box-shadow: var(--shadow-soft);
 }
 
-.testimonials__quote-media {
-  min-height: 190px;
-  overflow: hidden;
-  background: var(--color-gray-light);
-}
-
-.testimonials__quote-media img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 24%;
-}
-
 .testimonials__quote-copy {
-  padding: clamp(28px, 4vw, 48px);
+  min-width: 0;
 }
 
 .testimonials__statement {
