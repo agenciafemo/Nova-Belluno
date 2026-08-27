@@ -265,11 +265,13 @@
   font-weight: 500;
 }
 
-.familias-page__testimonial blockquote {
+.familias-page__testimonial-statement {
+  max-width: 22ch;
   margin-top: 34px;
+  margin-inline: auto;
   color: var(--color-white);
   font-family: var(--font-heading);
-  font-size: clamp(2.1rem, 5vw, 4.5rem);
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
   line-height: 1.08;
   letter-spacing: -.03em;
 }
@@ -280,25 +282,6 @@
   color: color-mix(in srgb, var(--color-white) 70%, transparent);
   font-size: .78rem;
   line-height: 1.6;
-}
-
-.familias-page__testimonial a {
-  display: inline-flex;
-  gap: 8px;
-  margin-top: 22px;
-  color: var(--color-white);
-  font-size: .85rem;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.familias-page__testimonial a span {
-  transition: transform .25s ease;
-}
-
-.familias-page__testimonial a:hover span {
-  transform: translate(3px, -3px);
 }
 
 .familias-page a:focus-visible {
@@ -355,11 +338,5 @@
 
   .familias-page__hero-media {
     min-height: 340px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .familias-page__testimonial a span {
-    transition: none;
   }
 }
