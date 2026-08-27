@@ -44,12 +44,14 @@ export function getRelatedPosts(
     .filter((post) => post.id !== currentPost.id)
     .map((post) => ({
       post,
+      isPrevious: post.data.publishedAt.getTime() <= currentPost.data.publishedAt.getTime(),
       score:
         (post.data.category === currentPost.data.category ? 3 : 0)
         + post.data.tags.filter((tag) => currentTags.has(tag)).length,
     }))
     .sort((first, second) =>
-      second.score - first.score
+      Number(second.isPrevious) - Number(first.isPrevious)
+      || second.score - first.score
       || second.post.data.publishedAt.getTime() - first.post.data.publishedAt.getTime(),
     )
     .slice(0, limit)

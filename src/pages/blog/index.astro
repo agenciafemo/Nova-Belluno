@@ -83,10 +83,28 @@ const jsonLd = {
           </div>
         )}
 
+        {visiblePosts.length > 0 && (
+          <div class="blog-page__latest">
+            <header>
+              <p class="blog-page__section-label">Publicações recentes</p>
+              <h2 id="latest-posts-title">Mais conteúdos para sua família</h2>
+            </header>
+            <div class="blog-page__grid">
+              {visiblePosts.map((post) => <BlogCard {post} />)}
+            </div>
+          </div>
+        )}
+
         <aside class="blog-page__partner-card" aria-label="Conteúdo parceiro Longevidade365">
-          <div class="blog-page__partner-art" aria-hidden="true">
-            <span class="blog-page__partner-art-mark">365</span>
-            <span class="blog-page__partner-art-plus">+</span>
+          <div class="blog-page__partner-brand">
+            <img
+              src="/assets/img/partners/longevidade365-logo.png"
+              alt="Longevidade365"
+              width="1765"
+              height="204"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
           <div class="blog-page__partner-copy">
             <p class="blog-page__section-label">Conteúdo parceiro</p>
@@ -102,18 +120,6 @@ const jsonLd = {
             </a>
           </div>
         </aside>
-
-        {visiblePosts.length > 0 && (
-          <div class="blog-page__latest">
-            <header>
-              <p class="blog-page__section-label">Publicações recentes</p>
-              <h2 id="latest-posts-title">Mais conteúdos para sua família</h2>
-            </header>
-            <div class="blog-page__grid">
-              {visiblePosts.map((post) => <BlogCard {post} />)}
-            </div>
-          </div>
-        )}
 
         {remainingPosts.length > pageSize && (
           <nav class="blog-page__pagination" aria-label="Paginação do blog">

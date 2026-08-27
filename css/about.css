@@ -3,7 +3,7 @@
   scroll-margin-top: calc(var(--header-bar) + 24px);
   padding: clamp(80px, 10vw, 144px) 24px clamp(44px, 5vw, 64px);
   overflow: hidden;
-  background: var(--color-white);
+  background: var(--color-beige-soft);
 }
 
 .about__inner {

@@ -1,7 +1,7 @@
 /* ---------- FAQ compartilhado ---------- */
 .faq-section {
   padding: clamp(72px, 9vw, 124px) 24px;
-  background: var(--color-white);
+  background: var(--color-beige-soft);
   scroll-margin-top: var(--header-bar);
 }
 
