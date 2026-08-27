@@ -73,6 +73,10 @@
   font-variant-numeric: tabular-nums;
 }
 
+.trust-stats__value--area {
+  white-space: nowrap;
+}
+
 .trust-stats__label {
   max-width: 30ch;
   margin-top: clamp(14px, 2vw, 20px);
@@ -99,6 +103,10 @@
     width: clamp(160px, 45vw, 195px);
     opacity: .05;
     transform: rotate(-4deg);
+  }
+
+  .trust-stats__value--area {
+    font-size: clamp(2.35rem, 11vw, 3rem);
   }
 }
 

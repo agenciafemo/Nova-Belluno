@@ -23,7 +23,8 @@
   }
 
   counters.forEach((counter) => {
-    counter.textContent = formatValue(counter, 0);
+    const start = Number(counter.dataset.start || 0);
+    counter.textContent = formatValue(counter, start);
   });
 
   function animateCounters() {
@@ -37,13 +38,14 @@
 
       counters.forEach((counter, index) => {
         const target = Number(counter.dataset.count);
+        const start = Number(counter.dataset.start || 0);
         const elapsed = now - startedAt - index * STAGGER;
         const progress = Math.min(Math.max(elapsed / DURATION, 0), 1);
         const easedProgress = 1 - Math.pow(1 - progress, 3);
 
         counter.textContent = formatValue(
           counter,
-          Math.round(target * easedProgress)
+          Math.round(start + (target - start) * easedProgress)
         );
         if (progress < 1) isComplete = false;
       });
