@@ -138,17 +138,6 @@
   min-height: 150px;
 }
 
-/* O widget já possui um cabeçalho com nota e origem; ocultamos apenas o
-   título genérico em inglês para evitar duplicidade com o título da seção. */
-#JFWebsiteWidget-01a043613070700082758ad11d17666fbed9 .jf-reviews-title-bar {
-  display: none !important;
-}
-
-#JFWebsiteWidget-01a043613070700082758ad11d17666fbed9 button.jf-google-reviews-cta {
-  border-color: var(--color-primary) !important;
-  background-color: var(--color-primary) !important;
-}
-
 @media (min-width: 760px) {
   .testimonials {
     padding-inline: 40px;

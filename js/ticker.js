@@ -9,7 +9,6 @@
     'Ambiente arborizado',
     '12 min do centro de Criciúma',
     'Equipe multidisciplinar',
-    'Hospedagem temporária e definitiva',
     'Siderópolis · Capivari de Baixo',
   ];
   const SEPARATOR = '   /   ';

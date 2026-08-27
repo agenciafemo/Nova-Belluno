@@ -20,17 +20,6 @@
     }
   }
 
-  function localizeWidget() {
-    const callToAction = container.querySelector(
-      'button.jf-google-reviews-cta span'
-    );
-
-    if (!callToAction) return false;
-
-    callToAction.textContent = 'Avaliar no Google';
-    return true;
-  }
-
   function markAsLoaded() {
     if (!container.childElementCount) return false;
 
@@ -41,7 +30,7 @@
   }
 
   const contentObserver = new MutationObserver(() => {
-    if (markAsLoaded() && localizeWidget()) contentObserver.disconnect();
+    if (markAsLoaded()) contentObserver.disconnect();
   });
 
   contentObserver.observe(container, { childList: true, subtree: true });
