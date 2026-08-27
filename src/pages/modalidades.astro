@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import modalitiesMarkup from '../content/modalidades.html?raw';
+import '../styles/modalities.css';
+
+const title = 'Modalidades de cuidado | Nova Belluno';
+const description = 'Conheça o Residencial Geriátrico e a Hospedagem Geriátrica Temporária da Nova Belluno. Duas modalidades de acolhimento para diferentes momentos da família.';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': 'https://novabelluno.com.br/modalidades/#webpage',
+      url: 'https://novabelluno.com.br/modalidades/',
+      name: title,
+      description,
+      inLanguage: 'pt-BR',
+      isPartOf: {
+        '@type': 'WebSite',
+        '@id': 'https://novabelluno.com.br/#website',
+        name: 'Nova Belluno',
+        url: 'https://novabelluno.com.br/',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://novabelluno.com.br/modalidades/#breadcrumb',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Início',
+          item: 'https://novabelluno.com.br/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Modalidades',
+          item: 'https://novabelluno.com.br/modalidades/',
+        },
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout
+  {title}
+  {description}
+  canonicalPath="/modalidades/"
+  bodyClass="internal-page modalities-page"
+  headerVariant="inner"
+  activePage="modalidades"
+  showSkipLink
+  showCredit={false}
+  image="/assets/img/hero/hero-02.webp"
+  imageAlt="Área verde e arborizada da Nova Belluno"
+  {jsonLd}
+>
+  <Fragment set:html={modalitiesMarkup} />
+  <script>
+    import '../scripts/internal.ts';
+  </script>
+</BaseLayout>

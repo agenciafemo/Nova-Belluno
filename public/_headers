@@ -1,0 +1,28 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-src https://www.google.com https://maps.google.com; upgrade-insecure-requests
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/img/optimized/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/img/hero/optimized/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/img/services/optimized/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/img/instagram/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/admin/*
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow, noarchive

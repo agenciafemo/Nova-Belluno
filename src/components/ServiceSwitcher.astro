@@ -1,0 +1,85 @@
+---
+import type { Service } from '../data/services';
+
+interface Props {
+  services: Service[];
+  currentSlug: string;
+}
+
+const { services, currentSlug } = Astro.props;
+---
+
+<details class="service-switcher" data-service-switcher>
+  <summary
+    class="service-switcher__trigger"
+    aria-controls="service-switcher-panel"
+    aria-expanded="false"
+  >
+    <span class="service-switcher__hamburger" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </span>
+    <span>Todos os serviços</span>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+         stroke-linejoin="round" aria-hidden="true">
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  </summary>
+
+  <div class="service-switcher__panel" id="service-switcher-panel">
+    <p class="service-switcher__label">Escolha uma área de cuidado</p>
+    <ul>
+      {services.map((item) => (
+        <li>
+          <a
+            href={`/servicos/${item.slug}/`}
+            class:list={{ 'is-current': item.slug === currentSlug }}
+            aria-current={item.slug === currentSlug ? 'page' : undefined}
+          >
+            <span>{item.number} · {item.area}</span>
+            <strong>{item.title}</strong>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a class="service-switcher__overview" href="/#servicos">
+      Ver a visão geral dos serviços
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M13 6l6 6-6 6" />
+      </svg>
+    </a>
+  </div>
+</details>
+
+<script>
+  document.querySelectorAll<HTMLDetailsElement>('[data-service-switcher]').forEach((switcher) => {
+    const trigger = switcher.querySelector<HTMLElement>('summary');
+    if (!trigger) return;
+
+    const syncState = () => {
+      trigger.setAttribute('aria-expanded', String(switcher.open));
+    };
+
+    syncState();
+    switcher.addEventListener('toggle', syncState);
+
+    document.addEventListener('pointerdown', (event) => {
+      if (switcher.open && event.target instanceof Node && !switcher.contains(event.target)) {
+        switcher.open = false;
+      }
+    });
+
+    switcher.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape' || !switcher.open) return;
+      switcher.open = false;
+      trigger.focus();
+    });
+  });
+</script>

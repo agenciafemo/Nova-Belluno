@@ -1,0 +1,365 @@
+/* ---------- Página para filhos e familiares ---------- */
+.familias-page {
+  background: var(--color-white);
+}
+
+.familias-page__hero {
+  padding: calc(var(--header-bar) + clamp(44px, 7vw, 96px)) 24px
+           clamp(64px, 8vw, 112px);
+  overflow: hidden;
+  background: var(--color-beige-soft);
+}
+
+.familias-page__hero-inner,
+.familias-page__reframe-inner,
+.familias-page__columns-inner,
+.familias-page__steps-inner,
+.familias-page__testimonial-inner {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+
+.familias-page__hero-inner {
+  display: grid;
+  gap: clamp(40px, 7vw, 96px);
+}
+
+.familias-page__hero-content {
+  min-width: 0;
+  align-self: center;
+}
+
+.familias-page__hero-media {
+  position: relative;
+  min-height: 380px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-gray-light);
+  box-shadow: var(--shadow-soft);
+}
+
+.familias-page__hero-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top,
+    color-mix(in srgb, var(--color-primary-dark) 64%, transparent),
+    transparent 48%);
+  pointer-events: none;
+}
+
+.familias-page__hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.familias-page__hero-media figcaption {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  left: 24px;
+  z-index: 1;
+  max-width: 25ch;
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 2.3vw, 1.8rem);
+  line-height: 1.2;
+}
+
+.familias-page__reframe,
+.familias-page__columns,
+.familias-page__steps,
+.familias-page__testimonial {
+  padding: clamp(70px, 9vw, 124px) 24px;
+}
+
+.familias-page__reframe {
+  background: var(--color-white);
+}
+
+.familias-page__reframe-inner,
+.familias-page__columns-inner,
+.familias-page__steps-inner {
+  display: grid;
+  gap: clamp(32px, 6vw, 88px);
+}
+
+.familias-page__section-heading > p,
+.familias-page__testimonial-eyebrow {
+  margin-bottom: 14px;
+  color: var(--color-primary-light);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.familias-page__section-heading h2 {
+  max-width: 760px;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(2.1rem, 4.6vw, 4rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -.03em;
+}
+
+.familias-page__reframe-copy {
+  max-width: 52ch;
+  align-self: end;
+  color: var(--color-ink-soft);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.familias-page__reframe-copy p + p {
+  margin-top: 18px;
+}
+
+.familias-page__reframe-copy .familias-page__lead {
+  color: var(--color-primary);
+  font-size: 1.1rem;
+  line-height: 1.65;
+}
+
+.familias-page__columns {
+  background: var(--color-beige-soft);
+}
+
+.familias-page__benefit-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.familias-page__benefit-card {
+  min-height: 100%;
+  padding: clamp(26px, 4vw, 42px);
+  border: 1px solid var(--color-beige);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  box-shadow: var(--shadow-soft);
+}
+
+.familias-page__benefit-card--primary {
+  color: var(--color-white);
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+}
+
+.familias-page__benefit-number {
+  display: block;
+  color: var(--color-primary-light);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+}
+
+.familias-page__benefit-card--primary .familias-page__benefit-number {
+  color: color-mix(in srgb, var(--color-white) 70%, transparent);
+}
+
+.familias-page__benefit-card h3 {
+  margin-top: 46px;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.familias-page__benefit-card--primary h3 {
+  color: var(--color-white);
+}
+
+.familias-page__benefit-card ul {
+  margin-top: 24px;
+  display: grid;
+  gap: 15px;
+}
+
+.familias-page__benefit-card li {
+  position: relative;
+  padding-left: 22px;
+  color: var(--color-ink-soft);
+  font-size: .93rem;
+  line-height: 1.65;
+}
+
+.familias-page__benefit-card--primary li {
+  color: color-mix(in srgb, var(--color-white) 82%, transparent);
+}
+
+.familias-page__benefit-card li::before {
+  content: '';
+  position: absolute;
+  top: .72em;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+}
+
+.familias-page__benefit-card--primary li::before {
+  background: var(--color-white);
+}
+
+.familias-page__steps {
+  background: var(--color-white);
+}
+
+.familias-page__steps ol {
+  display: grid;
+  border-top: 1px solid var(--color-beige);
+}
+
+.familias-page__steps li {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 16px;
+  padding: 23px 0;
+  border-bottom: 1px solid var(--color-beige);
+}
+
+.familias-page__steps li > span {
+  color: var(--color-primary-light);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+}
+
+.familias-page__steps h3 {
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+  font-weight: 500;
+}
+
+.familias-page__steps p {
+  margin-top: 7px;
+  color: var(--color-ink-soft);
+  font-size: .9rem;
+  line-height: 1.6;
+}
+
+.familias-page__testimonial {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.familias-page__testimonial-inner {
+  max-width: 920px;
+  text-align: center;
+}
+
+.familias-page__testimonial-eyebrow {
+  color: color-mix(in srgb, var(--color-white) 68%, transparent);
+}
+
+.familias-page__testimonial h2 {
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 500;
+}
+
+.familias-page__testimonial blockquote {
+  margin-top: 34px;
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: clamp(2.1rem, 5vw, 4.5rem);
+  line-height: 1.08;
+  letter-spacing: -.03em;
+}
+
+.familias-page__testimonial-meta {
+  max-width: 54ch;
+  margin: 24px auto 0;
+  color: color-mix(in srgb, var(--color-white) 70%, transparent);
+  font-size: .78rem;
+  line-height: 1.6;
+}
+
+.familias-page__testimonial a {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 22px;
+  color: var(--color-white);
+  font-size: .85rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.familias-page__testimonial a span {
+  transition: transform .25s ease;
+}
+
+.familias-page__testimonial a:hover span {
+  transform: translate(3px, -3px);
+}
+
+.familias-page a:focus-visible {
+  outline: 3px solid var(--color-primary-light);
+  outline-offset: 4px;
+}
+
+@media (min-width: 760px) {
+  .familias-page__hero,
+  .familias-page__reframe,
+  .familias-page__columns,
+  .familias-page__steps,
+  .familias-page__testimonial {
+    padding-inline: 40px;
+  }
+
+  .familias-page__benefit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 840px) {
+  .familias-page__hero-inner,
+  .familias-page__reframe-inner,
+  .familias-page__columns-inner,
+  .familias-page__steps-inner {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, .9fr);
+    align-items: center;
+  }
+
+  .familias-page__hero-media {
+    min-height: 600px;
+  }
+
+  .familias-page__columns-inner,
+  .familias-page__steps-inner {
+    grid-template-columns: minmax(260px, .7fr) minmax(0, 1.3fr);
+    align-items: start;
+  }
+
+  .familias-page__benefit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 479px) {
+  .familias-page__hero,
+  .familias-page__reframe,
+  .familias-page__columns,
+  .familias-page__steps,
+  .familias-page__testimonial {
+    padding-inline: 20px;
+  }
+
+  .familias-page__hero-media {
+    min-height: 340px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .familias-page__testimonial a span {
+    transition: none;
+  }
+}

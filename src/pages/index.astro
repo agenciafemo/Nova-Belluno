@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import homeMarkup from '../content/home.html?raw';
+import '../styles/home.css';
+
+const title = 'Nova Belluno | Residencial Geriátrico em meio à natureza';
+const description = 'Residencial Geriátrico Nova Belluno: cuidado em meio à natureza, perto de Criciúma, com hospedagem temporária ou definitiva.';
+const homeFaq = [
+  {
+    question: 'Quais modalidades de hospedagem a Nova Belluno oferece?',
+    answer: 'Oferecemos hospedagem geriátrica temporária e definitiva. A equipe conversa com a família para compreender o momento e explicar como cada modalidade funciona.',
+  },
+  {
+    question: 'Qual unidade fica mais próxima de Criciúma?',
+    answer: 'A unidade principal, em Siderópolis, fica a aproximadamente 12 minutos do centro de Criciúma.',
+  },
+  {
+    question: 'Os mesmos serviços estão disponíveis nas duas unidades?',
+    answer: 'A estrutura e a disponibilidade de alguns serviços podem variar entre Siderópolis e Capivari de Baixo. Consulte a equipe para confirmar o atendimento adequado à necessidade da família.',
+  },
+  {
+    question: 'Como funciona o acompanhamento da equipe?',
+    answer: 'Diferentes profissionais trabalham de forma integrada, com cuidados de enfermagem, nutrição, psicologia, fisioterapia, recreação e avaliação médica regular, de acordo com cada residente.',
+  },
+  {
+    question: 'Como posso agendar uma visita?',
+    answer: 'Acesse a página de Contato, escolha a unidade e fale pelo WhatsApp para combinar a visita e esclarecer suas dúvidas.',
+  },
+];
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://novabelluno.com.br/#website',
+      url: 'https://novabelluno.com.br/',
+      name: 'Nova Belluno',
+      alternateName: 'Residencial Geriátrico Nova Belluno',
+      inLanguage: 'pt-BR',
+      publisher: { '@id': 'https://novabelluno.com.br/#organization' },
+    },
+    {
+      '@type': 'WebPage',
+      '@id': 'https://novabelluno.com.br/#webpage',
+      url: 'https://novabelluno.com.br/',
+      name: title,
+      description,
+      inLanguage: 'pt-BR',
+      isPartOf: { '@id': 'https://novabelluno.com.br/#website' },
+      about: { '@id': 'https://novabelluno.com.br/#organization' },
+    },
+    {
+      '@type': 'Organization',
+      '@id': 'https://novabelluno.com.br/#organization',
+      name: 'Nova Belluno',
+      alternateName: 'Residencial Geriátrico Nova Belluno',
+      url: 'https://novabelluno.com.br/',
+      logo: 'https://novabelluno.com.br/assets/img/LOGOAZUL.png',
+      image: 'https://novabelluno.com.br/assets/img/hero/hero-08.webp',
+      foundingDate: '2016',
+      email: 'contato@novabelluno.com.br',
+      telephone: '+55 48 99174-9986',
+      sameAs: ['https://www.instagram.com/novabelluno/'],
+      areaServed: [
+        { '@type': 'City', name: 'Siderópolis' },
+        { '@type': 'City', name: 'Capivari de Baixo' },
+        { '@type': 'City', name: 'Criciúma' },
+      ],
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'atendimento',
+        telephone: '+55 48 99174-9986',
+        email: 'contato@novabelluno.com.br',
+        availableLanguage: 'Portuguese',
+      },
+      department: [
+        { '@id': 'https://novabelluno.com.br/contato/#sideropolis' },
+        { '@id': 'https://novabelluno.com.br/contato/#capivari' },
+      ],
+      potentialAction: {
+        '@type': 'CommunicateAction',
+        target: 'https://novabelluno.com.br/contato/',
+        name: 'Falar com a Nova Belluno',
+      },
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://novabelluno.com.br/#faq',
+      mainEntity: homeFaq.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+    },
+  ],
+};
+---
+
+<BaseLayout
+  {title}
+  {description}
+  canonicalPath="/"
+  image="/assets/img/hero/hero-08.webp"
+  imageAlt="Pessoa idosa acompanhada durante um passeio ao ar livre"
+  {jsonLd}
+>
+  <Fragment set:html={homeMarkup} />
+  <script>
+    import '../scripts/home.ts';
+  </script>
+</BaseLayout>

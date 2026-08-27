@@ -1,0 +1,99 @@
+/* ---------- Depoimentos ---------- */
+.testimonials {
+  padding: clamp(70px, 9vw, 120px) 24px;
+  background: var(--color-white);
+}
+
+.testimonials__inner {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  display: grid;
+  gap: 34px;
+}
+
+.testimonials__heading > p {
+  margin-bottom: 14px;
+  color: var(--color-primary-light);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.testimonials__heading h2 {
+  max-width: 650px;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -.03em;
+}
+
+.testimonials__quote {
+  padding: clamp(28px, 4vw, 48px);
+  border-radius: var(--radius-md);
+  background: var(--color-beige-soft);
+  box-shadow: var(--shadow-soft);
+}
+
+.testimonials__quote blockquote {
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.8rem, 3.5vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -.025em;
+}
+
+.testimonials__quote figcaption {
+  max-width: 48ch;
+  margin-top: 22px;
+  color: var(--color-ink-soft);
+  font-size: .8rem;
+  line-height: 1.6;
+}
+
+.testimonials__quote a {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 20px;
+  color: var(--color-primary);
+  font-size: .8rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.testimonials__quote a span {
+  transition: transform .25s ease;
+}
+
+.testimonials__quote a:hover span {
+  transform: translate(3px, -3px);
+}
+
+.testimonials a:focus-visible {
+  outline: 3px solid var(--color-primary-light);
+  outline-offset: 4px;
+}
+
+@media (min-width: 760px) {
+  .testimonials {
+    padding-inline: 40px;
+  }
+}
+
+@media (min-width: 840px) {
+  .testimonials__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, .82fr);
+    align-items: center;
+    gap: clamp(54px, 9vw, 140px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .testimonials__quote a span {
+    transition: none;
+  }
+}

@@ -1,0 +1,305 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FAQ from '../components/FAQ.astro';
+import type { FAQItem } from '../data/services';
+import '../styles/contact-page.css';
+
+const title = 'Contato e unidades | Nova Belluno';
+const description = 'Fale com a Nova Belluno, conheça as unidades de Siderópolis e Capivari de Baixo e agende uma visita com nossa equipe.';
+
+const contactFaq: FAQItem[] = [
+  {
+    question: 'Como posso agendar uma visita?',
+    answer: 'Escolha a unidade que deseja conhecer e fale com a equipe pelo WhatsApp. Durante o contato, vocês podem combinar a visita e esclarecer as primeiras dúvidas.',
+  },
+  {
+    question: 'Qual unidade fica mais próxima de Criciúma?',
+    answer: 'A unidade de Siderópolis fica a aproximadamente 12 minutos do centro de Criciúma.',
+  },
+  {
+    question: 'Os mesmos serviços estão disponíveis nas duas unidades?',
+    answer: 'A estrutura e a disponibilidade de alguns serviços podem variar entre as unidades. Nossa equipe confirma o atendimento disponível de acordo com a necessidade apresentada pela família.',
+  },
+  {
+    question: 'Posso falar diretamente com cada unidade?',
+    answer: 'Sim. Nesta página você encontra o telefone e um botão de WhatsApp específico para Siderópolis e para Capivari de Baixo.',
+  },
+  {
+    question: 'Quais modalidades de hospedagem a Nova Belluno oferece?',
+    answer: 'A Nova Belluno oferece hospedagem geriátrica temporária e hospedagem definitiva. A equipe pode explicar como cada modalidade funciona e qual delas se aproxima do momento da família.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'ContactPage',
+      '@id': 'https://novabelluno.com.br/contato/#webpage',
+      url: 'https://novabelluno.com.br/contato/',
+      name: title,
+      description,
+      inLanguage: 'pt-BR',
+      isPartOf: { '@id': 'https://novabelluno.com.br/#website' },
+      about: { '@id': 'https://novabelluno.com.br/#organization' },
+    },
+    {
+      '@type': 'Organization',
+      '@id': 'https://novabelluno.com.br/#organization',
+      name: 'Nova Belluno',
+      url: 'https://novabelluno.com.br/',
+      logo: 'https://novabelluno.com.br/assets/img/LOGOAZUL.png',
+      foundingDate: '2016',
+      email: 'contato@novabelluno.com.br',
+      sameAs: ['https://www.instagram.com/novabelluno/'],
+      subOrganization: [
+        { '@id': 'https://novabelluno.com.br/contato/#sideropolis' },
+        { '@id': 'https://novabelluno.com.br/contato/#capivari' },
+      ],
+    },
+    {
+      '@type': 'LocalBusiness',
+      '@id': 'https://novabelluno.com.br/contato/#sideropolis',
+      name: 'Nova Belluno — Siderópolis',
+      description: 'Unidade principal da Nova Belluno, a aproximadamente 12 minutos do centro de Criciúma.',
+      url: 'https://novabelluno.com.br/contato/#unidades-contato',
+      telephone: '+55 48 99174-9986',
+      email: 'contato@novabelluno.com.br',
+      branchCode: 'Unidade principal',
+      hasMap: 'https://goo.gl/maps/BRZDJ5YH2RcCGYz16',
+      parentOrganization: { '@id': 'https://novabelluno.com.br/#organization' },
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'R. José Salvaro, 716 — Patrimônio',
+        addressLocality: 'Siderópolis',
+        addressRegion: 'SC',
+        addressCountry: 'BR',
+      },
+    },
+    {
+      '@type': 'LocalBusiness',
+      '@id': 'https://novabelluno.com.br/contato/#capivari',
+      name: 'Nova Belluno — Capivari de Baixo',
+      description: 'Segunda unidade da Nova Belluno, com estrutura e disponibilidade de serviços próprias.',
+      url: 'https://novabelluno.com.br/contato/#unidades-contato',
+      telephone: '+55 48 98852-0869',
+      email: 'contato@novabelluno.com.br',
+      branchCode: 'Segunda unidade',
+      hasMap: 'https://goo.gl/maps/6dtiMG3jierziGfZ6',
+      parentOrganization: { '@id': 'https://novabelluno.com.br/#organization' },
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'R. Leonete Frontina Alves, 1491 — Vila Flor',
+        addressLocality: 'Capivari de Baixo',
+        addressRegion: 'SC',
+        addressCountry: 'BR',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://novabelluno.com.br/contato/#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://novabelluno.com.br/' },
+        { '@type': 'ListItem', position: 2, name: 'Contato', item: 'https://novabelluno.com.br/contato/' },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://novabelluno.com.br/contato/#faq',
+      mainEntity: contactFaq.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+    },
+  ],
+};
+---
+
+<BaseLayout
+  {title}
+  {description}
+  canonicalPath="/contato/"
+  bodyClass="internal-page contact-page"
+  headerVariant="inner"
+  activePage="contato"
+  showSkipLink
+  image="/assets/img/hero/hero-04.webp"
+  imageAlt="Área externa de uma unidade Nova Belluno"
+  {jsonLd}
+>
+  <main id="conteudo">
+    <section class="internal-hero contact-page__hero" aria-labelledby="contact-page-title">
+      <div class="internal-hero__inner contact-page__hero-inner">
+        <div class="internal-hero__content">
+          <nav class="internal-hero__breadcrumb" aria-label="Navegação estrutural">
+            <a href="/">Início</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Contato</span>
+          </nav>
+          <p class="internal-hero__eyebrow">Fale conosco</p>
+          <h1 class="internal-hero__title" id="contact-page-title">
+            Vamos conversar sobre o cuidado de quem você ama
+          </h1>
+          <p class="internal-hero__lead">
+            Nossa equipe está disponível para esclarecer dúvidas, apresentar as
+            modalidades de hospedagem e ajudar sua família a conhecer a unidade
+            mais adequada.
+          </p>
+        </div>
+
+        <aside class="contact-page__channels" aria-labelledby="contact-channels-title">
+          <div class="contact-page__channels-heading">
+            <p>Canais diretos</p>
+            <h2 id="contact-channels-title">Escolha como prefere conversar</h2>
+          </div>
+          <ul>
+            <li>
+              <span>WhatsApp</span>
+              <a href="#" data-whatsapp>Conversar com a equipe</a>
+            </li>
+            <li>
+              <span>E-mail</span>
+              <a href="mailto:contato@novabelluno.com.br">contato@novabelluno.com.br</a>
+            </li>
+            <li>
+              <span>Instagram</span>
+              <a href="https://www.instagram.com/novabelluno/" target="_blank" rel="noopener">@novabelluno</a>
+            </li>
+            <li>
+              <span>Visitas</span>
+              <a href="#unidades-contato">Escolher uma unidade</a>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="contact-page__units" id="unidades-contato" aria-labelledby="contact-units-title">
+      <div class="contact-page__units-inner">
+        <header class="contact-page__section-heading">
+          <div>
+            <p>Onde estamos</p>
+            <h2 id="contact-units-title">Fale diretamente com cada unidade</h2>
+          </div>
+          <p>
+            Conheça os endereços, veja a localização e converse com a equipe da
+            unidade sobre estrutura, disponibilidade e próximos passos.
+          </p>
+        </header>
+
+        <div class="contact-page__unit-grid">
+          <article class="contact-unit contact-unit--primary">
+            <header class="contact-unit__header">
+              <span>01</span>
+              <p>Unidade principal</p>
+            </header>
+            <div class="contact-unit__identity">
+              <p>Santa Catarina</p>
+              <h3>Siderópolis</h3>
+              <address>
+                R. José Salvaro, 716 — Patrimônio<br>
+                Siderópolis — SC
+              </address>
+              <a class="contact-unit__phone" href="tel:48991749986" aria-label="Ligar para a unidade de Siderópolis no número 48 99174-9986">
+                (48) 99174-9986
+              </a>
+            </div>
+            <p class="contact-unit__notice">
+              <strong>A apenas 12 minutos</strong>
+              do centro de Criciúma.
+            </p>
+            <div class="contact-unit__map">
+              <iframe
+                src="https://www.google.com/maps?q=Nova+Belluno%2C+R.+Jos%C3%A9+Salvaro%2C+716%2C+Sider%C3%B3polis%2C+SC&amp;z=15&amp;output=embed"
+                title="Mapa da unidade Nova Belluno de Siderópolis"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="contact-unit__actions">
+              <a class="action-button action-button--whatsapp" href="#"
+                 data-whatsapp data-whatsapp-target="sideropolis"
+                 data-whatsapp-message="Olá! Vim pelo site da Nova Belluno e gostaria de receber informações sobre a unidade de Siderópolis.">
+                <span class="action-button__label">Falar com Siderópolis</span>
+                <span class="action-button__hover" aria-hidden="true">
+                  <span>Falar com Siderópolis</span>
+                  <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+                <span class="action-button__fill" aria-hidden="true"></span>
+              </a>
+              <a class="contact-unit__map-link" href="https://goo.gl/maps/BRZDJ5YH2RcCGYz16" target="_blank" rel="noopener">Abrir no Google Maps <span aria-hidden="true">↗</span></a>
+            </div>
+          </article>
+
+          <article class="contact-unit contact-unit--secondary">
+            <header class="contact-unit__header">
+              <span>02</span>
+              <p>Segunda unidade</p>
+            </header>
+            <div class="contact-unit__identity">
+              <p>Santa Catarina</p>
+              <h3>Capivari de Baixo</h3>
+              <address>
+                R. Leonete Frontina Alves, 1491 — Vila Flor<br>
+                Capivari de Baixo — SC
+              </address>
+              <a class="contact-unit__phone" href="tel:48988520869" aria-label="Ligar para a unidade de Capivari de Baixo no número 48 98852-0869">
+                (48) 98852-0869
+              </a>
+            </div>
+            <p class="contact-unit__notice">
+              <strong>Disponibilidade por unidade</strong>
+              A estrutura e alguns serviços podem variar. Consulte nossa equipe.
+            </p>
+            <div class="contact-unit__map">
+              <iframe
+                src="https://www.google.com/maps?q=Nova+Belluno%2C+R.+Leonete+Frontina+Alves%2C+1491%2C+Vila+Flor%2C+Capivari+de+Baixo%2C+SC&amp;z=15&amp;output=embed"
+                title="Mapa da unidade Nova Belluno de Capivari de Baixo"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen>
+              </iframe>
+            </div>
+            <div class="contact-unit__actions">
+              <a class="action-button action-button--whatsapp" href="#"
+                 data-whatsapp data-whatsapp-target="capivari"
+                 data-whatsapp-message="Olá! Vim pelo site da Nova Belluno e gostaria de receber informações sobre a unidade de Capivari de Baixo.">
+                <span class="action-button__label">Falar com Capivari</span>
+                <span class="action-button__hover" aria-hidden="true">
+                  <span>Falar com Capivari</span>
+                  <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+                <span class="action-button__fill" aria-hidden="true"></span>
+              </a>
+              <a class="contact-unit__map-link" href="https://goo.gl/maps/6dtiMG3jierziGfZ6" target="_blank" rel="noopener">Abrir no Google Maps <span aria-hidden="true">↗</span></a>
+            </div>
+          </article>
+        </div>
+
+        <aside class="contact-page__visit" aria-labelledby="visit-title">
+          <div>
+            <p>Conheça de perto</p>
+            <h2 id="visit-title">Quer visitar uma das unidades?</h2>
+          </div>
+          <p>
+            Escolha uma unidade e fale com nossa equipe para combinar a visita,
+            conhecer a estrutura e esclarecer suas dúvidas com tranquilidade.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <FAQ
+      items={contactFaq}
+      id="perguntas-sobre-contato"
+      eyebrow="Antes da conversa"
+      title="Perguntas frequentes sobre contato e visitas"
+    />
+  </main>
+
+  <script>
+    import '../scripts/internal.ts';
+  </script>
+</BaseLayout>

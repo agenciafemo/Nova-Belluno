@@ -1,0 +1,36 @@
+---
+import type { Service } from '../data/services';
+import WhatsAppIcon from './WhatsAppIcon.astro';
+
+interface Props {
+  service: Service;
+}
+
+const { service } = Astro.props;
+---
+
+<article class="service-card" aria-labelledby={`service-card-${service.slug}`}>
+  <div class="service-card__topline">
+    <span class="service-card__number" aria-hidden="true">{service.number}</span>
+    <span class="service-card__area">{service.area}</span>
+  </div>
+  <h3 id={`service-card-${service.slug}`}>
+    <a href={`/servicos/${service.slug}/`}>{service.title}</a>
+  </h3>
+  <p>{service.shortDescription}</p>
+  <div class="service-card__actions">
+    <a class="service-card__more" href={`/servicos/${service.slug}/`}>
+      Conhecer o serviço
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M13 6l6 6-6 6"/>
+      </svg>
+    </a>
+    <a class="service-card__whatsapp" href="#" data-whatsapp
+       data-whatsapp-message={service.whatsappMessage}
+       aria-label={`Perguntar no WhatsApp sobre ${service.title}`}>
+      <WhatsAppIcon size={20} />
+    </a>
+  </div>
+</article>

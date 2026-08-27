@@ -1,0 +1,192 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import type { BlogPost } from '../../lib/blog';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import {
+  formatPostDate,
+  getPostSlug,
+  getPublishedPosts,
+  getReadingTime,
+  getRelatedPosts,
+} from '../../lib/blog';
+import '../../styles/blog.css';
+
+export const getStaticPaths = (async () => {
+  const posts = await getPublishedPosts();
+
+  return posts.map((post) => ({
+    params: { slug: getPostSlug(post) },
+    props: { post, allPosts: posts },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  post: BlogPost;
+  allPosts: BlogPost[];
+}
+
+const { post, allPosts } = Astro.props;
+const { Content, headings } = await render(post);
+const slug = getPostSlug(post);
+const relatedPosts = getRelatedPosts(post, allPosts);
+const canonicalPath = `/blog/${slug}/`;
+const title = post.data.seoTitle ?? `${post.data.title} | Nova Belluno`;
+const description = post.data.seoDescription ?? post.data.description;
+const updatedAt = post.data.updatedAt ?? post.data.publishedAt;
+const wasUpdated = updatedAt.getTime() !== post.data.publishedAt.getTime();
+const imageUrl = `https://novabelluno.com.br${post.data.coverImage}`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BlogPosting',
+      '@id': `https://novabelluno.com.br${canonicalPath}#article`,
+      mainEntityOfPage: `https://novabelluno.com.br${canonicalPath}`,
+      headline: post.data.title,
+      description,
+      image: imageUrl,
+      datePublished: post.data.publishedAt.toISOString(),
+      dateModified: updatedAt.toISOString(),
+      inLanguage: 'pt-BR',
+      author: {
+        '@type': 'Organization',
+        name: post.data.author,
+        url: 'https://novabelluno.com.br/',
+      },
+      publisher: {
+        '@type': 'Organization',
+        '@id': 'https://novabelluno.com.br/#organization',
+        name: 'Nova Belluno',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://novabelluno.com.br/assets/img/LOGOAZUL.png',
+        },
+      },
+      articleSection: post.data.category,
+      keywords: post.data.tags.join(', '),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `https://novabelluno.com.br${canonicalPath}#breadcrumb`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://novabelluno.com.br/' },
+        { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://novabelluno.com.br/blog/' },
+        { '@type': 'ListItem', position: 3, name: post.data.title, item: `https://novabelluno.com.br${canonicalPath}` },
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout
+  {title}
+  {description}
+  {canonicalPath}
+  bodyClass="internal-page blog-article"
+  headerVariant="inner"
+  activePage="blog"
+  showSkipLink
+  image={post.data.coverImage}
+  imageAlt={post.data.coverAlt}
+  type="article"
+  articlePublishedTime={post.data.publishedAt.toISOString()}
+  articleModifiedTime={updatedAt.toISOString()}
+  articleAuthor={post.data.author}
+  {jsonLd}
+>
+  <main id="conteudo">
+    <article>
+      <header class="blog-article__hero">
+        <div class="blog-article__hero-inner">
+          <nav class="internal-hero__breadcrumb" aria-label="Navegação estrutural">
+            <a href="/">Início</a>
+            <span aria-hidden="true">/</span>
+            <a href="/blog/">Blog</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{post.data.category}</span>
+          </nav>
+          <p class="blog-article__category">{post.data.category}</p>
+          <h1>{post.data.title}</h1>
+          <p class="blog-article__description">{post.data.description}</p>
+          <div class="blog-article__meta">
+            <span>Por {post.data.author}</span>
+            <time datetime={post.data.publishedAt.toISOString()}>{formatPostDate(post.data.publishedAt)}</time>
+            {wasUpdated && <time datetime={updatedAt.toISOString()}>Atualizado em {formatPostDate(updatedAt)}</time>}
+            <span>{getReadingTime(post)} min de leitura</span>
+          </div>
+        </div>
+      </header>
+
+      <figure class="blog-article__cover">
+        <img src={post.data.coverImage} width="1536" height="1024" fetchpriority="high" decoding="async" alt={post.data.coverAlt}>
+      </figure>
+
+      <div class="blog-article__layout">
+        {headings.filter((heading) => heading.depth === 2).length > 1 && (
+          <aside class="blog-article__toc" aria-labelledby="article-toc-title">
+            <p id="article-toc-title">Neste artigo</p>
+            <ol>
+              {headings.filter((heading) => heading.depth === 2).map((heading) => (
+                <li><a href={`#${heading.slug}`}>{heading.text}</a></li>
+              ))}
+            </ol>
+          </aside>
+        )}
+
+        <div class="blog-article__body">
+          <Content />
+          <aside class="blog-article__disclaimer" aria-label="Aviso editorial">
+            Este conteúdo é informativo e não substitui uma avaliação profissional individualizada.
+          </aside>
+        </div>
+      </div>
+    </article>
+
+    {relatedPosts.length > 0 && (
+      <section class="blog-related" aria-labelledby="related-title">
+        <div class="blog-related__inner">
+          <header>
+            <p>Continue lendo</p>
+            <h2 id="related-title">Conteúdos relacionados</h2>
+          </header>
+          <div class="blog-page__grid">
+            {relatedPosts.map((relatedPost) => <BlogCard post={relatedPost} />)}
+          </div>
+          <a class="blog-related__back" href="/blog/">Ver todos os conteúdos <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+    )}
+
+    <section class="internal-contact" aria-labelledby="article-contact-title">
+      <div class="internal-contact__inner">
+        <div>
+          <p class="internal-contact__eyebrow">Converse com a equipe</p>
+          <h2 id="article-contact-title">Quer esclarecer uma dúvida sobre o momento da sua família?</h2>
+        </div>
+        <div class="internal-contact__content">
+          <p>
+            Conte um pouco sobre o que vocês procuram. Nossa equipe pode apresentar
+            as modalidades e explicar as diferenças entre as unidades.
+          </p>
+          <div class="internal-contact__actions">
+            <a class="action-button action-button--whatsapp" href="#" data-whatsapp
+               data-whatsapp-message={`Olá! Li o artigo “${post.data.title}” e gostaria de conversar com a equipe da Nova Belluno.`}>
+              <span class="action-button__label">Falar no WhatsApp</span>
+              <span class="action-button__hover" aria-hidden="true">
+                <span>Falar no WhatsApp</span>
+                <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+              <span class="action-button__fill" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    import '../../scripts/internal.ts';
+  </script>
+</BaseLayout>

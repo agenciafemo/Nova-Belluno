@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/admin.css';
+
+const title = 'Administração do blog | Nova Belluno';
+const description = 'Área restrita para gestão editorial do blog Nova Belluno.';
+---
+
+<BaseLayout
+  {title}
+  {description}
+  canonicalPath="/admin/"
+  bodyClass="admin-page"
+  robots="noindex, nofollow, noarchive"
+  showHeader={false}
+  showFooter={false}
+  showFloatingWhatsApp={false}
+  showCredit={false}
+>
+  <main class="admin-shell" id="conteudo">
+    <header class="admin-brand">
+      <a href="/" aria-label="Voltar ao site Nova Belluno">
+        <img src="/assets/img/optimized/logo-hero.webp" width="240" height="82" alt="Nova Belluno">
+      </a>
+      <p>Gestão editorial</p>
+    </header>
+
+    <p class="admin-status" id="admin-status" role="status" aria-live="polite"></p>
+
+    <section class="admin-login" id="admin-login" aria-labelledby="admin-login-title">
+      <div>
+        <p class="admin-eyebrow">Área restrita</p>
+        <h1 id="admin-login-title">Acesse o blog</h1>
+        <p>Entre com o e-mail autorizado para criar, revisar e publicar conteúdos.</p>
+      </div>
+      <form id="admin-login-form">
+        <label for="admin-email">E-mail</label>
+        <input id="admin-email" name="email" type="email" autocomplete="username" required>
+        <label for="admin-password">Senha</label>
+        <input id="admin-password" name="password" type="password" autocomplete="current-password" minlength="12" required>
+        <button type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <section class="admin-workspace" id="admin-workspace" hidden aria-labelledby="admin-workspace-title">
+      <header class="admin-workspace__header">
+        <div>
+          <p class="admin-eyebrow">Blog Nova Belluno</p>
+          <h1 id="admin-workspace-title">Conteúdo e SEO</h1>
+        </div>
+        <div class="admin-workspace__actions">
+          <button type="button" id="admin-new-post">Novo artigo</button>
+          <button type="button" id="admin-logout">Sair</button>
+        </div>
+      </header>
+
+      <div class="admin-grid">
+        <aside class="admin-posts" aria-labelledby="admin-posts-title">
+          <h2 id="admin-posts-title">Artigos</h2>
+          <div id="admin-post-list"></div>
+        </aside>
+
+        <form class="admin-editor" id="admin-editor-form">
+          <input id="post-id" name="id" type="hidden">
+          <div class="admin-editor__heading">
+            <div>
+              <p class="admin-eyebrow">Editor</p>
+              <h2 id="editor-title">Novo artigo</h2>
+            </div>
+            <span id="editor-state">Rascunho</span>
+          </div>
+
+          <p class="admin-editor__publish-note">
+            Ao publicar, o artigo entra no site após a conclusão do próximo rebuild.
+          </p>
+
+          <div class="admin-field admin-field--wide">
+            <label for="post-title">Título</label>
+            <input id="post-title" name="title" maxlength="120" required>
+          </div>
+
+          <div class="admin-field admin-field--wide">
+            <label for="post-slug">URL amigável</label>
+            <div class="admin-prefix"><span>/blog/</span><input id="post-slug" name="slug" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required></div>
+          </div>
+
+          <div class="admin-field admin-field--wide">
+            <label for="post-description">Resumo</label>
+            <textarea id="post-description" name="description" rows="3" minlength="30" maxlength="180" required></textarea>
+            <small><span data-counter="post-description">0</span>/180</small>
+          </div>
+
+          <div class="admin-field">
+            <label for="post-author">Autor</label>
+            <input id="post-author" name="author" value="Equipe Nova Belluno" maxlength="80" required>
+          </div>
+
+          <div class="admin-field">
+            <label for="post-category">Categoria</label>
+            <select id="post-category" name="category" required>
+              <option>Cuidados</option>
+              <option>Bem-estar</option>
+              <option>Família</option>
+              <option>Envelhecimento</option>
+            </select>
+          </div>
+
+          <div class="admin-field admin-field--wide">
+            <label for="post-tags">Palavras-chave <small>(separadas por vírgula)</small></label>
+            <input id="post-tags" name="tags" placeholder="cuidado ao idoso, residencial geriátrico">
+          </div>
+
+          <div class="admin-field admin-field--wide">
+            <label for="post-body">Conteúdo em Markdown</label>
+            <textarea id="post-body" name="body_markdown" rows="18" minlength="100" required></textarea>
+            <small>Use subtítulos claros, listas úteis e informações verificáveis.</small>
+          </div>
+
+          <div class="admin-field">
+            <label for="post-cover-file">Imagem de capa</label>
+            <input id="post-cover-file" type="file" accept="image/jpeg,image/png,image/webp,image/avif">
+          </div>
+
+          <div class="admin-field">
+            <label for="post-cover-image">Caminho ou URL da capa</label>
+            <input id="post-cover-image" name="cover_image" required>
+          </div>
+
+          <div class="admin-field admin-field--wide">
+            <label for="post-cover-alt">Descrição acessível da imagem</label>
+            <input id="post-cover-alt" name="cover_alt" minlength="10" maxlength="180" required>
+          </div>
+
+          <div class="admin-field">
+            <label for="post-seo-title">Título SEO</label>
+            <input id="post-seo-title" name="seo_title" maxlength="70">
+            <small><span data-counter="post-seo-title">0</span>/70</small>
+          </div>
+
+          <div class="admin-field">
+            <label for="post-status">Status</label>
+            <select id="post-status" name="status">
+              <option value="draft">Rascunho</option>
+              <option value="published">Publicado</option>
+              <option value="archived">Arquivado</option>
+            </select>
+          </div>
+
+          <div class="admin-field admin-field--wide">
+            <label for="post-seo-description">Descrição SEO</label>
+            <textarea id="post-seo-description" name="seo_description" rows="3" maxlength="180"></textarea>
+            <small><span data-counter="post-seo-description">0</span>/180</small>
+          </div>
+
+          <div class="admin-editor__footer">
+            <label class="admin-check"><input id="post-featured" name="featured" type="checkbox"> Destacar no blog</label>
+            <button type="submit" id="admin-save-post">Salvar artigo</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    import '../../scripts/admin.ts';
+  </script>
+</BaseLayout>

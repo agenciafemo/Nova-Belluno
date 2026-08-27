@@ -1,0 +1,23 @@
+{
+  "name": "nova-belluno-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "sync:blog": "node scripts/sync-blog.mjs",
+    "prebuild": "npm run sync:blog",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.3",
+    "@supabase/supabase-js": "2.112.4",
+    "astro": "7.2.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "typescript": "6.0.3"
+  }
+}

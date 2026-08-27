@@ -1,0 +1,72 @@
+---
+interface Props {
+  variant?: 'home' | 'inner';
+  activePage?: 'modalidades' | 'servicos' | 'quem-somos' | 'familias' | 'contato' | 'blog';
+  showCredit?: boolean;
+}
+
+const { variant = 'home', activePage, showCredit = true } = Astro.props;
+const isHome = variant === 'home';
+const homeHref = isHome ? '#top' : '/';
+const sectionHref = (id: string) => isHome ? `#${id}` : `/#${id}`;
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__brand">
+      <a href={homeHref} aria-label="Nova Belluno — voltar ao início">
+        <img src="/assets/img/optimized/logo-header.webp" width="320" height="120"
+             loading="lazy" decoding="async" alt="Nova Belluno">
+      </a>
+      <p>
+        Cuidado, respeito e acolhimento para uma rotina mais tranquila,
+        próxima à natureza e à família.
+      </p>
+    </div>
+
+    <nav class="site-footer__nav" aria-label="Atalhos do rodapé">
+      <h2>Explore</h2>
+      {!isHome && <a href="/">Início</a>}
+      <a href="/modalidades/" aria-current={activePage === 'modalidades' ? 'page' : undefined}>Modalidades</a>
+      <a href="/#servicos" aria-current={activePage === 'servicos' ? 'page' : undefined}>Serviços</a>
+      <a href="/quem-somos/" aria-current={activePage === 'quem-somos' ? 'page' : undefined}>Quem somos</a>
+      <a href="/familias/" aria-current={activePage === 'familias' ? 'page' : undefined}>Famílias</a>
+      <a href={sectionHref('unidades')}>Unidades</a>
+      <a href="/contato/" aria-current={activePage === 'contato' ? 'page' : undefined}>Contato</a>
+      <a href="/blog/" aria-current={activePage === 'blog' ? 'page' : undefined}>Blog</a>
+    </nav>
+
+    <div class="site-footer__contact">
+      <h2>Fale conosco</h2>
+      <a href="tel:48991749986">
+        <span>Siderópolis</span>
+        (48) 99174-9986
+      </a>
+      <a href="tel:48988520869">
+        <span>Capivari de Baixo</span>
+        (48) 98852-0869
+      </a>
+      <a href="mailto:contato@novabelluno.com.br">
+        contato@novabelluno.com.br
+      </a>
+    </div>
+  </div>
+
+  <div class="site-footer__bottom">
+    <p>© <span id="footer-year">2026</span> Nova Belluno. Todos os direitos reservados.</p>
+    {showCredit && (
+      <p class="site-footer__credit">
+        Desenvolvido por{' '}
+        <a href="https://femo.com.br/" target="_blank" rel="noopener">//FEMO</a>
+      </p>
+    )}
+    <a href="#top" class="site-footer__back-to-top">
+      Voltar ao topo
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+           stroke-linejoin="round" aria-hidden="true">
+        <path d="m6 15 6-6 6 6"/>
+      </svg>
+    </a>
+  </div>
+</footer>

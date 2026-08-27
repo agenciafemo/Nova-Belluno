@@ -1,0 +1,78 @@
+---
+import SEOHead from '../components/SEOHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import FloatingWhatsApp from '../components/FloatingWhatsApp.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+  bodyId?: string;
+  bodyClass?: string;
+  headerVariant?: 'home' | 'inner';
+  activePage?: 'modalidades' | 'servicos' | 'quem-somos' | 'familias' | 'contato' | 'blog';
+  showSkipLink?: boolean;
+  showCredit?: boolean;
+  showHeader?: boolean;
+  showFooter?: boolean;
+  showFloatingWhatsApp?: boolean;
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  articlePublishedTime?: string;
+  articleModifiedTime?: string;
+  articleAuthor?: string;
+  robots?: string;
+  jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
+}
+
+const {
+  title,
+  description,
+  canonicalPath,
+  bodyId = 'top',
+  bodyClass,
+  headerVariant = 'home',
+  activePage,
+  showSkipLink = false,
+  showCredit = true,
+  showHeader = true,
+  showFooter = true,
+  showFloatingWhatsApp = true,
+  image,
+  imageAlt,
+  type,
+  articlePublishedTime,
+  articleModifiedTime,
+  articleAuthor,
+  robots,
+  jsonLd,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <SEOHead
+      {title}
+      {description}
+      {canonicalPath}
+      {image}
+      {imageAlt}
+      {type}
+      {articlePublishedTime}
+      {articleModifiedTime}
+      {articleAuthor}
+      {robots}
+      {jsonLd}
+    />
+  </head>
+  <body id={bodyId} class={bodyClass}>
+    {showSkipLink && <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>}
+    {showHeader && <Header variant={headerVariant} {activePage} />}
+    <slot />
+    {showFooter && <Footer variant={headerVariant} {activePage} {showCredit} />}
+    {showFloatingWhatsApp && <FloatingWhatsApp />}
+  </body>
+</html>

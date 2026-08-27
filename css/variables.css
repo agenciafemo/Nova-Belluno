@@ -1,0 +1,51 @@
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/assets/fonts/inter-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500 600;
+  font-display: swap;
+  src: url('/assets/fonts/playfair-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/assets/fonts/playfair-italic-latin.woff2') format('woff2');
+}
+
+:root {
+  /* Paleta Nova Belluno */
+  --color-primary: #132478;       /* azul principal */
+  --color-primary-dark: #0c1a5c;
+  --color-primary-light: #2c3f9e;
+  --color-beige: #F3ECE0;         /* bege */
+  --color-beige-soft: #FAF6EF;
+  --color-gray-light: #F2F3F5;    /* cinza claro */
+  --color-white: #FFFFFF;
+  --color-ink: #1B1E2B;
+  --color-ink-soft: #4A4E5D;
+  /* Verde escuro preserva a leitura de texto branco em contraste AA. */
+  --color-whatsapp: #08783E;
+
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --container-max: 1280px;
+  --header-height: 88px;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 20px 60px -20px rgba(19, 36, 120, 0.25);
+}

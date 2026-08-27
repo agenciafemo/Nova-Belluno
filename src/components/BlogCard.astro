@@ -1,0 +1,38 @@
+---
+import type { BlogPost } from '../lib/blog';
+import { formatPostDate, getPostSlug, getReadingTime } from '../lib/blog';
+
+interface Props {
+  post: BlogPost;
+  featured?: boolean;
+}
+
+const { post, featured = false } = Astro.props;
+const slug = getPostSlug(post);
+---
+
+<article class:list={['blog-card', { 'blog-card--featured': featured }]}>
+  <a class="blog-card__image" href={`/blog/${slug}/`} tabindex="-1" aria-hidden="true">
+    <img
+      src={post.data.coverImage}
+      width="1536"
+      height="1024"
+      loading={featured ? 'eager' : 'lazy'}
+      fetchpriority={featured ? 'high' : 'auto'}
+      decoding="async"
+      alt=""
+    >
+  </a>
+  <div class="blog-card__content">
+    <div class="blog-card__meta">
+      <span>{post.data.category}</span>
+      <time datetime={post.data.publishedAt.toISOString()}>{formatPostDate(post.data.publishedAt)}</time>
+      <span>{getReadingTime(post)} min de leitura</span>
+    </div>
+    <h2><a href={`/blog/${slug}/`}>{post.data.title}</a></h2>
+    <p>{post.data.description}</p>
+    <a class="blog-card__link" href={`/blog/${slug}/`} aria-label={`Ler artigo: ${post.data.title}`}>
+      Ler artigo <span aria-hidden="true">→</span>
+    </a>
+  </div>
+</article>

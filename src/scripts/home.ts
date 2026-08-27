@@ -1,0 +1,9 @@
+import '../../js/config.js';
+import '../../js/header.js';
+import '../../js/navigation.js';
+import '../../js/hero.js';
+import '../../js/hero-copy.js';
+import '../../js/ticker.js';
+import '../../js/trust-stats.js';
+import '../../js/about-carousel.js';
+import '../../js/services-carousel.js';

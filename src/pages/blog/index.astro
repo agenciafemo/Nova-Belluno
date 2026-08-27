@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import { getPublishedPosts } from '../../lib/blog';
+import '../../styles/blog.css';
+
+const posts = await getPublishedPosts();
+const featuredPost = posts.find((post) => post.data.featured) ?? posts[0];
+const remainingPosts = posts.filter((post) => post.id !== featuredPost?.id);
+const pageSize = 6;
+const visiblePosts = remainingPosts.slice(0, pageSize);
+const title = 'Blog sobre cuidado e envelhecimento | Nova Belluno';
+const description = 'Informação para famílias e cuidadores sobre envelhecimento, bem-estar, convivência e decisões relacionadas ao cuidado da pessoa idosa.';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Blog',
+      '@id': 'https://novabelluno.com.br/blog/#blog',
+      url: 'https://novabelluno.com.br/blog/',
+      name: 'Conteúdos Nova Belluno',
+      description,
+      inLanguage: 'pt-BR',
+      publisher: { '@id': 'https://novabelluno.com.br/#organization' },
+      blogPost: posts.map((post) => ({
+        '@type': 'BlogPosting',
+        headline: post.data.title,
+        url: `https://novabelluno.com.br/blog/${post.id}/`,
+        datePublished: post.data.publishedAt.toISOString(),
+      })),
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://novabelluno.com.br/blog/#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://novabelluno.com.br/' },
+        { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://novabelluno.com.br/blog/' },
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout
+  {title}
+  {description}
+  canonicalPath="/blog/"
+  bodyClass="internal-page blog-page"
+  headerVariant="inner"
+  activePage="blog"
+  showSkipLink
+  {jsonLd}
+>
+  <main id="conteudo">
+    <section class="blog-page__hero" aria-labelledby="blog-title">
+      <div class="blog-page__hero-inner">
+        <nav class="internal-hero__breadcrumb" aria-label="Navegação estrutural">
+          <a href="/">Início</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Blog</span>
+        </nav>
+        <p class="internal-hero__eyebrow">Conteúdos Nova Belluno</p>
+        <h1 id="blog-title">Informação para cuidar com mais segurança e tranquilidade</h1>
+        <p>
+          Conteúdos para famílias e cuidadores sobre envelhecimento, bem-estar,
+          convivência e decisões relacionadas ao cuidado da pessoa idosa.
+        </p>
+      </div>
+    </section>
+
+    <section class="blog-page__content" aria-labelledby="latest-posts-title" data-page-size={pageSize}>
+      <div class="blog-page__content-inner">
+        {featuredPost ? (
+          <div class="blog-page__featured">
+            <p class="blog-page__section-label">Leitura em destaque</p>
+            <BlogCard post={featuredPost} featured />
+          </div>
+        ) : (
+          <div class="blog-page__empty">
+            <p class="blog-page__section-label">Conteúdos Nova Belluno</p>
+            <h2>Estamos preparando novas leituras</h2>
+            <p>Em breve, este espaço reunirá conteúdos para famílias e cuidadores.</p>
+          </div>
+        )}
+
+        <aside class="blog-page__partner-card" aria-label="Conteúdo parceiro Longevidade365">
+          <div class="blog-page__partner-art" aria-hidden="true">
+            <span class="blog-page__partner-art-mark">365</span>
+            <span class="blog-page__partner-art-plus">+</span>
+          </div>
+          <div class="blog-page__partner-copy">
+            <p class="blog-page__section-label">Conteúdo parceiro</p>
+            <h2>Informação para viver melhor em todas as fases da longevidade</h2>
+            <p>Conheça o Longevidade365, um portal com conteúdos sobre saúde, cultura, finanças e bem-estar para apoiar escolhas mais conscientes.</p>
+            <a class="action-button action-button--inverse" href="https://longevidade365.com.br/" target="_blank" rel="noopener">
+              <span class="action-button__label">Conhecer Longevidade365</span>
+              <span class="action-button__hover" aria-hidden="true">
+                <span>Conhecer Longevidade365</span>
+                <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+              <span class="action-button__fill" aria-hidden="true"></span>
+            </a>
+          </div>
+        </aside>
+
+        {visiblePosts.length > 0 && (
+          <div class="blog-page__latest">
+            <header>
+              <p class="blog-page__section-label">Publicações recentes</p>
+              <h2 id="latest-posts-title">Mais conteúdos para sua família</h2>
+            </header>
+            <div class="blog-page__grid">
+              {visiblePosts.map((post) => <BlogCard {post} />)}
+            </div>
+          </div>
+        )}
+
+        {remainingPosts.length > pageSize && (
+          <nav class="blog-page__pagination" aria-label="Paginação do blog">
+            <span aria-current="page">1</span>
+            <span aria-label="Mais páginas serão disponibilizadas com novos artigos">Próximas páginas</span>
+          </nav>
+        )}
+      </div>
+    </section>
+
+    <section class="internal-contact" aria-labelledby="blog-contact-title">
+      <div class="internal-contact__inner">
+        <div>
+          <p class="internal-contact__eyebrow">Conversa individual</p>
+          <h2 id="blog-contact-title">Cada família vive um momento diferente</h2>
+        </div>
+        <div class="internal-contact__content">
+          <p>
+            Os conteúdos ajudam a organizar dúvidas, mas uma conversa com a equipe
+            permite entender as modalidades, unidades e possibilidades de acolhimento.
+          </p>
+          <div class="internal-contact__actions">
+            <a class="action-button action-button--whatsapp" href="#" data-whatsapp
+               data-whatsapp-message="Olá! Li um conteúdo no blog da Nova Belluno e gostaria de conversar com a equipe.">
+              <span class="action-button__label">Falar no WhatsApp</span>
+              <span class="action-button__hover" aria-hidden="true">
+                <span>Falar no WhatsApp</span>
+                <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+              <span class="action-button__fill" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    import '../../scripts/internal.ts';
+  </script>
+</BaseLayout>

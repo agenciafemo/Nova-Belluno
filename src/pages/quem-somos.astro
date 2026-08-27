@@ -1,0 +1,273 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import '../styles/about-page.css';
+
+const title = 'Quem somos | História e cuidado Nova Belluno';
+const description = 'Conheça a história da Nova Belluno, que desde 2016 acolhe pessoas idosas com respeito, proximidade às famílias, natureza e cuidado integrado.';
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'AboutPage',
+      '@id': 'https://novabelluno.com.br/quem-somos/#webpage',
+      url: 'https://novabelluno.com.br/quem-somos/',
+      name: title,
+      description,
+      inLanguage: 'pt-BR',
+      isPartOf: {
+        '@type': 'WebSite',
+        '@id': 'https://novabelluno.com.br/#website',
+        name: 'Nova Belluno',
+        url: 'https://novabelluno.com.br/',
+      },
+      about: {
+        '@type': 'Organization',
+        '@id': 'https://novabelluno.com.br/#organization',
+        name: 'Nova Belluno',
+        foundingDate: '2016',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://novabelluno.com.br/quem-somos/#breadcrumb',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Início',
+          item: 'https://novabelluno.com.br/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Quem somos',
+          item: 'https://novabelluno.com.br/quem-somos/',
+        },
+      ],
+    },
+  ],
+};
+---
+
+<BaseLayout
+  {title}
+  {description}
+  canonicalPath="/quem-somos/"
+  bodyClass="internal-page about-page"
+  headerVariant="inner"
+  activePage="quem-somos"
+  showSkipLink
+  image="/assets/img/hero/optimized/hero-05-1536.webp"
+  imageAlt="Pessoa idosa acompanhada por uma profissional em uma área verde"
+  {jsonLd}
+>
+  <main id="conteudo">
+    <section class="about-page__hero" aria-labelledby="about-page-title">
+      <div class="about-page__hero-inner">
+        <div class="about-page__hero-content">
+          <nav class="internal-hero__breadcrumb" aria-label="Navegação estrutural">
+            <a href="/">Início</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Quem somos</span>
+          </nav>
+          <p class="internal-hero__eyebrow">Nossa história</p>
+          <h1 class="internal-hero__title" id="about-page-title">
+            Uma história construída no cuidado
+          </h1>
+          <p class="internal-hero__lead">
+            Desde 2016, a Nova Belluno acolhe pessoas idosas com atenção às
+            necessidades de cada residente, respeito às suas histórias e
+            proximidade com as famílias.
+          </p>
+        </div>
+
+        <div class="about-page__hero-visual" aria-label="Cuidado e natureza na Nova Belluno">
+          <figure class="about-page__hero-image about-page__hero-image--main">
+            <img src="/assets/img/hero/optimized/hero-05-1536.webp"
+                 srcset="/assets/img/hero/optimized/about-05-960.webp 960w, /assets/img/hero/optimized/hero-05-1536.webp 1536w"
+                 sizes="(max-width: 759px) 100vw, 52vw"
+                 width="1536" height="1024"
+                 decoding="async"
+                 alt="Pessoa idosa acompanhada por uma profissional em uma área verde">
+          </figure>
+          <figure class="about-page__hero-image about-page__hero-image--support">
+            <img src="/assets/img/hero/optimized/hero-07-1536.webp"
+                 srcset="/assets/img/hero/optimized/about-07-960.webp 960w, /assets/img/hero/optimized/hero-07-1536.webp 1536w"
+                 sizes="(max-width: 759px) 72vw, 28vw"
+                 width="1536" height="1024"
+                 decoding="async"
+                 alt="Área externa arborizada e acessível da Nova Belluno">
+          </figure>
+          <p class="about-page__hero-since" aria-label="Desde 2016">
+            <span>Desde</span>
+            <strong>2016</strong>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-page__story" aria-labelledby="about-story-title">
+      <span class="about-page__story-year" aria-hidden="true">2016</span>
+      <div class="about-page__story-inner">
+        <header class="about-page__section-heading">
+          <p>Cuidado próximo</p>
+          <h2 id="about-story-title">Cuidado próximo, respeito e presença</h2>
+        </header>
+        <div class="about-page__story-copy">
+          <p class="about-page__story-lead">
+            Cada pessoa chega com uma trajetória própria. Nosso papel é acolher
+            essa história e ajudar a construir uma rotina segura, tranquila e humana.
+          </p>
+          <p>
+            Em Siderópolis e Capivari de Baixo, reunimos ambientes acolhedores,
+            contato com a natureza e diferentes profissionais contribuindo para
+            o bem-estar de cada residente.
+          </p>
+          <p>
+            O diálogo com a família acompanha esse processo. Escutar, explicar
+            e respeitar as particularidades de cada momento fazem parte da forma
+            como entendemos o cuidado.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-page__principles" aria-labelledby="about-principles-title">
+      <div class="about-page__principles-inner">
+        <header class="about-page__principles-heading">
+          <div class="about-page__section-heading">
+            <p>O que nos orienta</p>
+            <h2 id="about-principles-title">Princípios presentes em cada escolha</h2>
+          </div>
+          <p>
+            Um cuidado consistente nasce da atenção à pessoa, aos seus vínculos
+            e ao ambiente que participa de sua rotina.
+          </p>
+        </header>
+
+        <ol class="about-page__principles-list">
+          <li>
+            <span aria-hidden="true">01</span>
+            <h3>Respeito à individualidade</h3>
+            <p>Necessidades, preferências e histórias orientam a forma de acolher cada residente.</p>
+          </li>
+          <li>
+            <span aria-hidden="true">02</span>
+            <h3>Presença próxima à família</h3>
+            <p>Atenção, diálogo e transparência ajudam a família a participar de cada etapa.</p>
+          </li>
+          <li>
+            <span aria-hidden="true">03</span>
+            <h3>Natureza e tranquilidade</h3>
+            <p>Espaços verdes contribuem para uma rotina mais leve, acolhedora e conectada ao entorno.</p>
+          </li>
+          <li>
+            <span aria-hidden="true">04</span>
+            <h3>Cuidado integrado</h3>
+            <p>Diferentes áreas compartilham olhares para organizar o cuidado conforme cada necessidade.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="about-page__units" aria-labelledby="about-units-title">
+      <div class="about-page__units-inner">
+        <header class="about-page__units-intro">
+          <div class="about-page__section-heading">
+            <p>Onde acolhemos</p>
+            <h2 id="about-units-title">Duas unidades, cada uma com sua configuração</h2>
+          </div>
+          <p>
+            A equipe apresenta com transparência a estrutura e os serviços
+            disponíveis em cada casa para que a família possa conhecer as diferenças.
+          </p>
+        </header>
+
+        <div class="about-page__units-list">
+          <article>
+            <span aria-hidden="true">01</span>
+            <div>
+              <p>Santa Catarina</p>
+              <h3>Siderópolis</h3>
+              <p>
+                Ambientes cercados pela natureza, a 12 minutos do centro de
+                Criciúma, com estrutura e áreas de cuidado apresentadas durante a visita.
+              </p>
+            </div>
+          </article>
+          <article>
+            <span aria-hidden="true">02</span>
+            <div>
+              <p>Santa Catarina</p>
+              <h3>Capivari de Baixo</h3>
+              <p>
+                Com configuração diferente da casa de Siderópolis, a unidade
+                possui estrutura e disponibilidade próprias, explicadas pela equipe no atendimento.
+              </p>
+            </div>
+          </article>
+        </div>
+
+        <a class="action-button" href="/#unidades">
+          <span class="action-button__label">Conhecer as unidades</span>
+          <span class="action-button__hover" aria-hidden="true">
+            <span>Conhecer as unidades</span>
+            <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+          </span>
+          <span class="action-button__fill" aria-hidden="true"></span>
+        </a>
+      </div>
+    </section>
+
+    <section class="internal-contact" aria-labelledby="about-contact-title">
+      <div class="internal-contact__inner">
+        <div>
+          <p class="internal-contact__eyebrow">Uma conversa de perto</p>
+          <h2 id="about-contact-title">Conheça de perto o cuidado da Nova Belluno</h2>
+        </div>
+        <div class="internal-contact__content">
+          <p>
+            Converse com a equipe, esclareça suas dúvidas e agende uma visita
+            para conhecer a unidade mais adequada ao momento da sua família.
+          </p>
+          <div class="internal-contact__actions">
+            <a class="action-button action-button--whatsapp" href="#"
+               data-whatsapp
+               data-whatsapp-message="Olá! Gostaria de conhecer melhor a história e as unidades da Nova Belluno.">
+              <span class="action-button__label">Falar no WhatsApp</span>
+              <span class="action-button__hover" aria-hidden="true">
+                <span>Falar no WhatsApp</span>
+                <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14M13 6l6 6-6 6"/>
+                </svg>
+              </span>
+              <span class="action-button__fill" aria-hidden="true"></span>
+            </a>
+            <a class="action-button action-button--inverse" href="/#unidades">
+              <span class="action-button__label">Ver nossas unidades</span>
+              <span class="action-button__hover" aria-hidden="true">
+                <span>Ver nossas unidades</span>
+                <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14M13 6l6 6-6 6"/>
+                </svg>
+              </span>
+              <span class="action-button__fill" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    import '../scripts/internal.ts';
+  </script>
+</BaseLayout>

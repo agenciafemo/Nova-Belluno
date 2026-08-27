@@ -1,0 +1,227 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FAQ from '../../components/FAQ.astro';
+import ServiceSwitcher from '../../components/ServiceSwitcher.astro';
+import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
+import {
+  getRelatedServices,
+  services,
+  type Service,
+} from '../../data/services';
+import '../../styles/service-guide.css';
+
+export function getStaticPaths() {
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+interface Props {
+  service: Service;
+}
+
+const { service } = Astro.props;
+const relatedServices = getRelatedServices(service);
+const canonicalPath = `/servicos/${service.slug}/`;
+const canonicalUrl = `https://novabelluno.com.br${canonicalPath}`;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: service.metaTitle,
+      description: service.metaDescription,
+      primaryImageOfPage: {
+        '@type': 'ImageObject',
+        url: `https://novabelluno.com.br${service.image}`,
+        caption: service.imageAlt,
+        width: service.imageWidth,
+        height: service.imageHeight,
+      },
+      inLanguage: 'pt-BR',
+      isPartOf: {
+        '@type': 'WebSite',
+        '@id': 'https://novabelluno.com.br/#website',
+        name: 'Nova Belluno',
+        url: 'https://novabelluno.com.br/',
+      },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonicalUrl}#breadcrumb`,
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://novabelluno.com.br/' },
+        { '@type': 'ListItem', position: 2, name: 'Serviços', item: 'https://novabelluno.com.br/#servicos' },
+        { '@type': 'ListItem', position: 3, name: service.title, item: canonicalUrl },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `${canonicalUrl}#faq`,
+      mainEntity: service.faq.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title={service.metaTitle}
+  description={service.metaDescription}
+  {canonicalPath}
+  bodyClass="internal-page service-guide"
+  headerVariant="inner"
+  activePage="servicos"
+  showSkipLink
+  image={service.image}
+  imageAlt={service.imageAlt}
+  {jsonLd}
+>
+  <main id="conteudo">
+    <section class="service-guide__hero" aria-labelledby="service-guide-title">
+      <div class="service-guide__hero-inner">
+        <div class="service-guide__hero-content">
+          <nav class="internal-hero__breadcrumb" aria-label="Navegação estrutural">
+            <a href="/">Início</a>
+            <span aria-hidden="true">/</span>
+            <a href="/#servicos">Serviços</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">{service.title}</span>
+          </nav>
+          <ServiceSwitcher services={services} currentSlug={service.slug} />
+          <p class="service-guide__eyebrow">{service.area}</p>
+          <h1 id="service-guide-title">{service.title}</h1>
+          <p class="service-guide__lead">{service.introduction}</p>
+          <div class="service-guide__actions">
+            <a class="action-button action-button--whatsapp" href="#"
+               data-whatsapp data-whatsapp-message={service.whatsappMessage}>
+              <span class="action-button__label">
+                <WhatsAppIcon size={18} />
+                Conversar sobre este serviço
+              </span>
+              <span class="action-button__hover" aria-hidden="true">
+                <span>Conversar sobre este serviço</span>
+                <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+              <span class="action-button__fill" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+
+        <figure class="service-guide__media">
+          <img
+            src={service.image}
+            alt={service.imageAlt}
+            width={service.imageWidth}
+            height={service.imageHeight}
+            style={`object-position: ${service.imagePosition ?? '50% 50%'};`}
+            decoding="async"
+            fetchpriority="high"
+          />
+        </figure>
+      </div>
+    </section>
+
+    <section class="service-guide__body" aria-label={`Informações sobre ${service.title}`}>
+      <div class="service-guide__body-inner">
+        <article class="service-guide__article">
+          {service.sections.map((section, index) => (
+            <section aria-labelledby={`${service.slug}-section-${index}`}>
+              <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+              <div>
+                <h2 id={`${service.slug}-section-${index}`}>{section.title}</h2>
+                {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+              </div>
+            </section>
+          ))}
+        </article>
+
+        <aside class="service-guide__notice" aria-labelledby="service-guide-notice-title">
+          <p>Transparência no atendimento</p>
+          <h2 id="service-guide-notice-title">Confirme o funcionamento na unidade escolhida</h2>
+          <span>
+            A disponibilidade, a frequência e o formato deste serviço podem
+            variar conforme a unidade e as necessidades de cada residente.
+          </span>
+          <a href="#" data-whatsapp data-whatsapp-message={service.whatsappMessage}>
+            Perguntar no WhatsApp
+            <WhatsAppIcon size={18} />
+          </a>
+        </aside>
+      </div>
+    </section>
+
+    <FAQ
+      items={service.faq}
+      id={`perguntas-${service.slug}`}
+      eyebrow="Dúvidas sobre o serviço"
+      title={`Perguntas frequentes sobre ${service.title}`}
+    />
+
+    <section class="service-guide__related" aria-labelledby="related-services-title">
+      <div class="service-guide__related-inner">
+        <div>
+          <p>Continue conhecendo</p>
+          <h2 id="related-services-title">Outras áreas que trabalham em conjunto</h2>
+        </div>
+        <ul>
+          {relatedServices.map((related) => (
+            <li>
+              <a href={`/servicos/${related.slug}/`}>
+                <span>{related.number} · {related.area}</span>
+                <strong>{related.title}</strong>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                     stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="internal-contact" aria-labelledby="service-guide-contact-title">
+      <div class="internal-contact__inner">
+        <div>
+          <p class="internal-contact__eyebrow">Conversa acolhedora</p>
+          <h2 id="service-guide-contact-title">Quer conversar sobre {service.title.toLowerCase()}?</h2>
+        </div>
+        <div class="internal-contact__content">
+          <p>
+            Fale com a equipe para conhecer a disponibilidade, entender como o
+            cuidado é organizado e esclarecer dúvidas sobre as duas unidades.
+          </p>
+          <div class="internal-contact__actions">
+            <a class="action-button action-button--whatsapp" href="#"
+               data-whatsapp data-whatsapp-message={service.whatsappMessage}>
+              <span class="action-button__label">Falar no WhatsApp</span>
+              <span class="action-button__hover" aria-hidden="true">
+                <span>Falar no WhatsApp</span>
+                <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+              <span class="action-button__fill" aria-hidden="true"></span>
+            </a>
+              <a class="action-button action-button--inverse" href="/#servicos">
+              <span class="action-button__label">Ver todos os serviços</span>
+              <span class="action-button__hover" aria-hidden="true">
+                <span>Ver todos os serviços</span>
+                <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+              <span class="action-button__fill" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    import '../../scripts/internal.ts';
+  </script>
+</BaseLayout>

@@ -1,0 +1,40 @@
+---
+import type { FAQItem } from '../data/services';
+
+interface Props {
+  items: FAQItem[];
+  title?: string;
+  eyebrow?: string;
+  id?: string;
+}
+
+const {
+  items,
+  title = 'Perguntas frequentes',
+  eyebrow = 'Tire suas dúvidas',
+  id = 'perguntas-frequentes',
+} = Astro.props;
+const titleId = `${id}-title`;
+---
+
+<section class="faq-section" id={id} aria-labelledby={titleId}>
+  <div class="faq-section__inner">
+    <div class="faq-section__heading">
+      <p>{eyebrow}</p>
+      <h2 id={titleId}>{title}</h2>
+    </div>
+    <div class="faq-section__list">
+      {items.map((item) => (
+        <details>
+          <summary>
+            <span>{item.question}</span>
+            <span class="faq-section__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="faq-section__answer">
+            <p>{item.answer}</p>
+          </div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

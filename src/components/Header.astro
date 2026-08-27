@@ -1,0 +1,95 @@
+---
+interface Props {
+  variant?: 'home' | 'inner';
+  activePage?: 'modalidades' | 'servicos' | 'quem-somos' | 'familias' | 'contato' | 'blog';
+}
+
+import { services } from '../data/services';
+
+const { variant = 'home', activePage } = Astro.props;
+const isHome = variant === 'home';
+const headerClass = isHome ? 'site-header' : 'site-header site-header--inner';
+const homeHref = isHome ? '#top' : '/';
+---
+
+<header class={headerClass} id="site-header">
+  <div class="site-header__inner">
+    <a href={homeHref} class="site-header__logo" aria-label="Nova Belluno — início">
+      <img src="/assets/img/optimized/logo-header.webp" width="320" height="120" alt="Nova Belluno">
+    </a>
+
+    <nav class="site-header__nav" aria-label="Navegação principal">
+      <a href={homeHref} aria-current={isHome ? 'page' : undefined}>Início</a>
+      <a href="/modalidades/" aria-current={activePage === 'modalidades' ? 'page' : undefined}>Modalidades</a>
+      <div class="site-header__services">
+        <button class="site-header__services-toggle" id="services-menu-toggle" type="button"
+                aria-haspopup="menu" aria-expanded="false" aria-controls="services-menu"
+                aria-current={activePage === 'servicos' ? 'page' : undefined}>
+          <span class="site-header__services-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span>Serviços</span>
+        </button>
+        <div class="site-header__services-menu" id="services-menu" role="menu" aria-labelledby="services-menu-toggle" hidden>
+          {services.map((service) => (
+            <a href={`/servicos/${service.slug}/`} role="menuitem">
+              <span>{service.title}</span>
+              <span class="site-header__services-arrow" aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
+      </div>
+      <a href="/quem-somos/" aria-current={activePage === 'quem-somos' ? 'page' : undefined}>Quem somos</a>
+      <a href="/familias/" aria-current={activePage === 'familias' ? 'page' : undefined}>Famílias</a>
+      <a href="/contato/" aria-current={activePage === 'contato' ? 'page' : undefined}>Contato</a>
+      <a href="/blog/" aria-current={activePage === 'blog' ? 'page' : undefined}>Blog</a>
+    </nav>
+
+    <div class="site-header__actions">
+      <a href="#" class="site-header__whatsapp action-button action-button--whatsapp action-button--compact"
+         id="header-whatsapp" aria-label="Falar no WhatsApp">
+        <span class="action-button__label">
+          <svg class="site-header__whatsapp-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12.004 2C6.486 2 2 6.486 2 12.004c0 2.114.652 4.078 1.766 5.696L2.06 22l4.435-1.66a9.96 9.96 0 0 0 5.51 1.66h.005c5.518 0 10.004-4.486 10.004-10.004S17.522 2 12.004 2zm0 18.181a8.16 8.16 0 0 1-4.164-1.14l-.298-.177-3.098 1.16 1.176-3.02-.194-.31a8.148 8.148 0 0 1-1.25-4.35c0-4.512 3.672-8.184 8.183-8.184 2.185 0 4.24.852 5.786 2.399a8.13 8.13 0 0 1 2.397 5.792c0 4.512-3.672 8.184-8.183 8.184z"/></svg>
+          <span class="site-header__whatsapp-label site-header__whatsapp-label--full">Falar no WhatsApp</span>
+          <span class="site-header__whatsapp-label site-header__whatsapp-label--short">WhatsApp</span>
+        </span>
+        <span class="action-button__hover" aria-hidden="true">
+          <span class="site-header__whatsapp-label site-header__whatsapp-label--full">Falar no WhatsApp</span>
+          <span class="site-header__whatsapp-label site-header__whatsapp-label--short">WhatsApp</span>
+          <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+        <span class="action-button__fill" aria-hidden="true"></span>
+      </a>
+
+      <button class="site-header__menu-toggle" id="menu-toggle" type="button"
+              aria-expanded="false" aria-controls="mobile-navigation"
+              aria-label="Abrir menu">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="site-header__mobile-nav" id="mobile-navigation"
+       aria-label="Navegação em dispositivos móveis" aria-hidden="true">
+    <a href={homeHref} aria-current={isHome ? 'page' : undefined}>Início</a>
+    <a href="/modalidades/" aria-current={activePage === 'modalidades' ? 'page' : undefined}>Modalidades</a>
+    <button class="site-header__mobile-services-toggle" id="mobile-services-menu-toggle" type="button"
+            aria-haspopup="menu" aria-expanded="false" aria-controls="mobile-services-menu"
+            aria-current={activePage === 'servicos' ? 'page' : undefined}>
+      <span class="site-header__services-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span>Serviços</span>
+      <span class="site-header__mobile-services-chevron" aria-hidden="true">⌄</span>
+    </button>
+    <div class="site-header__mobile-services-menu" id="mobile-services-menu" role="menu" aria-labelledby="mobile-services-menu-toggle" hidden>
+      {services.map((service) => (
+        <a href={`/servicos/${service.slug}/`} role="menuitem">
+          <span>{service.title}</span>
+          <span class="site-header__services-arrow" aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </div>
+    <a href="/quem-somos/" aria-current={activePage === 'quem-somos' ? 'page' : undefined}>Quem somos</a>
+    <a href="/familias/" aria-current={activePage === 'familias' ? 'page' : undefined}>Famílias</a>
+    <a href="/contato/" aria-current={activePage === 'contato' ? 'page' : undefined}>Contato</a>
+    <a href="/blog/" aria-current={activePage === 'blog' ? 'page' : undefined}>Blog</a>
+  </nav>
+</header>

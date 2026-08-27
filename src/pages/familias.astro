@@ -1,0 +1,221 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FAQ from '../components/FAQ.astro';
+import '../styles/familias.css';
+
+const title = 'Para filhos e familiares | Nova Belluno';
+const description = 'Uma conversa mais leve sobre o cuidado de quem você ama: segurança, convivência, autonomia e presença para toda a família.';
+const faqItems = [
+  {
+    question: 'Escolher um residencial significa deixar meu familiar de lado?',
+    answer: 'Não. O acolhimento pode compartilhar as tarefas do dia a dia sem substituir os vínculos. A família continua presente, participa das decisões e mantém uma relação próxima com a pessoa residente.',
+  },
+  {
+    question: 'Como a Nova Belluno ajuda a família na rotina?',
+    answer: 'A equipe organiza os cuidados, acompanha as necessidades individuais e mantém uma comunicação próxima para que a família tenha mais clareza e tranquilidade ao longo do processo.',
+  },
+  {
+    question: 'A pessoa residente perde sua autonomia?',
+    answer: 'O objetivo é preservar a autonomia possível, respeitando preferências, ritmo e história de cada pessoa. A equipe oferece apoio na medida necessária para uma rotina segura e acolhedora.',
+  },
+  {
+    question: 'Como funciona a adaptação?',
+    answer: 'A adaptação acontece com escuta, acolhimento e acompanhamento próximo. Antes da hospedagem, a equipe conversa com a família para entender hábitos, necessidades e expectativas.',
+  },
+  {
+    question: 'Posso conhecer a unidade antes de decidir?',
+    answer: 'Sim. Agende uma visita para conhecer a unidade principal em Siderópolis ou conversar sobre a configuração da unidade de Capivari de Baixo.',
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebPage',
+      '@id': 'https://novabelluno.com.br/familias/#webpage',
+      url: 'https://novabelluno.com.br/familias/',
+      name: title,
+      description,
+      inLanguage: 'pt-BR',
+      isPartOf: { '@id': 'https://novabelluno.com.br/#website' },
+      about: { '@id': 'https://novabelluno.com.br/#organization' },
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://novabelluno.com.br/familias/#breadcrumb',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://novabelluno.com.br/' },
+        { '@type': 'ListItem', position: 2, name: 'Para famílias', item: 'https://novabelluno.com.br/familias/' },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://novabelluno.com.br/familias/#faq',
+      mainEntity: faqItems.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: { '@type': 'Answer', text: item.answer },
+      })),
+    },
+  ],
+};
+---
+
+<BaseLayout
+  {title}
+  {description}
+  canonicalPath="/familias/"
+  bodyClass="internal-page familias-page"
+  headerVariant="inner"
+  activePage="familias"
+  showSkipLink
+  image="/assets/img/hero/optimized/hero-08-1536.webp"
+  imageAlt="Familiar acompanhando uma pessoa idosa em uma área verde"
+  {jsonLd}
+>
+  <main id="conteudo">
+    <section class="familias-page__hero" aria-labelledby="familias-title">
+      <div class="familias-page__hero-inner">
+        <div class="familias-page__hero-content">
+          <nav class="internal-hero__breadcrumb" aria-label="Navegação estrutural">
+            <a href="/">Início</a>
+            <span aria-hidden="true">/</span>
+            <span aria-current="page">Para famílias</span>
+          </nav>
+          <p class="internal-hero__eyebrow">Para filhos e familiares</p>
+          <h1 class="internal-hero__title" id="familias-title">Cuidar também pode ser uma forma de estar mais perto</h1>
+          <p class="internal-hero__lead">
+            Escolher um residencial não é deixar alguém para trás. É compartilhar
+            o cuidado com uma equipe preparada, preservar vínculos e criar uma
+            rotina segura, acolhedora e com espaço para a vida continuar acontecendo.
+          </p>
+          <div class="internal-hero__actions">
+            <a class="action-button action-button--whatsapp" href="#" data-whatsapp
+               data-whatsapp-message="Olá! Sou familiar e gostaria de conversar sobre o cuidado na Nova Belluno.">
+              <span class="action-button__label">Conversar com a equipe</span>
+              <span class="action-button__hover" aria-hidden="true">
+                <span>Conversar com a equipe</span>
+                <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+              <span class="action-button__fill" aria-hidden="true"></span>
+            </a>
+            <a class="internal-hero__text-link" href="#como-funciona">
+              Entender como funciona <span aria-hidden="true">↓</span>
+            </a>
+          </div>
+        </div>
+        <figure class="familias-page__hero-media">
+          <img src="/assets/img/hero/optimized/hero-08-1536.webp"
+               srcset="/assets/img/hero/optimized/hero-08-1280.webp 1280w, /assets/img/hero/optimized/hero-08-1536.webp 1536w"
+               sizes="(max-width: 839px) 100vw, 48vw"
+               width="1536" height="1024" decoding="async"
+               alt="Familiar acompanhando uma pessoa idosa em uma área verde">
+          <figcaption>Mais suporte para quem você ama. Mais presença para a família.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="familias-page__reframe" id="como-funciona" aria-labelledby="familias-reframe-title">
+      <div class="familias-page__reframe-inner">
+        <div class="familias-page__section-heading">
+          <p>Uma decisão compartilhada</p>
+          <h2 id="familias-reframe-title">A responsabilidade não precisa ficar nas mãos de uma só pessoa</h2>
+        </div>
+        <div class="familias-page__reframe-copy">
+          <p class="familias-page__lead">Quando o cuidado é organizado por uma equipe, a família ganha clareza para participar com mais leveza e qualidade de presença.</p>
+          <p>A Nova Belluno combina hospedagem, convivência e acompanhamento de diferentes profissionais em uma rotina pensada para cada residente. O diálogo com a família faz parte desse cuidado desde a primeira conversa.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="familias-page__columns" aria-labelledby="familias-benefits-title">
+      <div class="familias-page__columns-inner">
+        <header class="familias-page__section-heading">
+          <p>O que muda no dia a dia</p>
+          <h2 id="familias-benefits-title">Mais tranquilidade para quem mora e para quem ama</h2>
+        </header>
+        <div class="familias-page__benefit-grid">
+          <article class="familias-page__benefit-card familias-page__benefit-card--primary">
+            <span class="familias-page__benefit-number" aria-hidden="true">01</span>
+            <h3>Para quem mora</h3>
+            <ul>
+              <li>Uma rotina acompanhada, respeitando preferências e ritmo.</li>
+              <li>Convivência, atividades e contato com ambientes verdes.</li>
+              <li>Suporte de enfermagem e avaliação médica regular conforme a necessidade.</li>
+            </ul>
+          </article>
+          <article class="familias-page__benefit-card">
+            <span class="familias-page__benefit-number" aria-hidden="true">02</span>
+            <h3>Para a família</h3>
+            <ul>
+              <li>Comunicação próxima para acompanhar cada etapa com clareza.</li>
+              <li>Menos sobrecarga operacional e mais tempo de qualidade juntos.</li>
+              <li>Participação nas decisões, visitas e momentos importantes da rotina.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="familias-page__steps" aria-labelledby="familias-steps-title">
+      <div class="familias-page__steps-inner">
+        <header class="familias-page__section-heading">
+          <p>Com calma, um passo de cada vez</p>
+          <h2 id="familias-steps-title">Como começar essa conversa</h2>
+        </header>
+        <ol>
+          <li><span>01</span><div><h3>Fale com a equipe</h3><p>Conte o momento da sua família e tire dúvidas sem compromisso.</p></div></li>
+          <li><span>02</span><div><h3>Conheça a unidade</h3><p>Agende uma visita para observar os ambientes e entender a rotina.</p></div></li>
+          <li><span>03</span><div><h3>Decida em conjunto</h3><p>Com informações claras, a família escolhe o caminho mais adequado.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="familias-page__testimonial" aria-labelledby="familias-testimonial-title">
+      <div class="familias-page__testimonial-inner">
+        <p class="familias-page__testimonial-eyebrow">Uma família contou</p>
+        <h2 id="familias-testimonial-title">Cuidado que cria vínculos</h2>
+        <blockquote>“Somos hoje uma grande família.”</blockquote>
+        <p class="familias-page__testimonial-meta">Vilma Zanette, familiar de residente — depoimento publicado pelo portal 4oito.</p>
+        <a href="https://www.4oito.com.br/noticia/festa-junina-anima-idosos-e-familiares-no-nova-belluno-15394" target="_blank" rel="noopener">Ler a história publicada <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+
+    <FAQ
+      items={faqItems}
+      id="familias-faq"
+      eyebrow="Perguntas de quem cuida"
+      title="Respostas para decidir com mais tranquilidade"
+    />
+
+    <section class="internal-contact" aria-labelledby="familias-contact-title">
+      <div class="internal-contact__inner">
+        <div>
+          <p class="internal-contact__eyebrow">Uma conversa de perto</p>
+          <h2 id="familias-contact-title">Você não precisa decidir tudo sozinho.</h2>
+        </div>
+        <div class="internal-contact__content">
+          <p>Converse com a equipe da Nova Belluno e conheça as possibilidades para o momento da sua família.</p>
+          <div class="internal-contact__actions">
+            <a class="action-button action-button--whatsapp" href="#" data-whatsapp
+               data-whatsapp-message="Olá! Sou familiar e gostaria de agendar uma conversa com a Nova Belluno.">
+              <span class="action-button__label">Falar no WhatsApp</span>
+              <span class="action-button__hover" aria-hidden="true"><span>Falar no WhatsApp</span><svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+              <span class="action-button__fill" aria-hidden="true"></span>
+            </a>
+            <a class="action-button action-button--inverse" href="/contato/">
+              <span class="action-button__label">Ver contatos</span>
+              <span class="action-button__hover" aria-hidden="true"><span>Ver contatos</span><svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+              <span class="action-button__fill" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    import '../scripts/internal.ts';
+  </script>
+</BaseLayout>
