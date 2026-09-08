@@ -46,17 +46,21 @@ for (const file of htmlFiles) {
   const isRedirect = /<meta\s+http-equiv=["']refresh["']/i.test(html);
   const isIndexable = !isNoIndex && !isRedirect && page !== '404.html' && page !== '404/index.html';
 
-  if (!/<html\b[^>]*\blang=["']pt-BR["']/i.test(html)) errors.push(`${page}: lang="pt-BR" ausente.`);
-
   const title = html.match(/<title>([\s\S]*?)<\/title>/i)?.[1].trim();
   const description = html.match(/<meta\s+name=["']description["']\s+content=["']([^"']+)["']/i)?.[1].trim();
   const canonical = html.match(/<link\s+rel=["']canonical["']\s+href=["']([^"']+)["']/i)?.[1].trim();
 
+  // Título e canonical valem para qualquer página, inclusive stubs de
+  // redirecionamento (que precisam apontar para o destino).
   if (!title) errors.push(`${page}: <title> ausente ou vazio.`);
-  if (!description) errors.push(`${page}: meta description ausente.`);
   if (!canonical || !/^https:\/\//.test(canonical)) errors.push(`${page}: canonical HTTPS absoluto ausente.`);
 
   if (isIndexable) {
+    // lang e description só fazem sentido em páginas indexáveis. Stubs de
+    // redirecionamento gerados pelo Astro não têm (nem devem ter) esses
+    // metadados, e eram acusados aqui indevidamente.
+    if (!/<html\b[^>]*\blang=["']pt-BR["']/i.test(html)) errors.push(`${page}: lang="pt-BR" ausente.`);
+    if (!description) errors.push(`${page}: meta description ausente.`);
     if (!/\bindex\b/i.test(robots) || /\bnoindex\b/i.test(robots)) errors.push(`${page}: diretiva index ausente.`);
     const h1Count = (html.match(/<h1\b/gi) ?? []).length;
     if (h1Count !== 1) errors.push(`${page}: esperado 1 H1, encontrado ${h1Count}.`);
@@ -98,8 +102,13 @@ reportDuplicate(canonicals, 'Canonical');
 
 for (const sitemapFile of files.filter((file) => /sitemap.*\.xml$/i.test(file))) {
   const sitemap = await readFile(sitemapFile, 'utf8');
+  /* Compara <loc> exato: com includes(), a hub /servicos/ (que é redirect e
+     fica fora do sitemap) era acusada por causa das filhas legítimas
+     /servicos/enfermagem/, /servicos/nutricao/ etc., que contêm essa string. */
+  const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/gi)].map((m) => m[1].trim());
   for (const forbidden of ['/admin/', '/404/', '/servicos/']) {
-    if (sitemap.includes(`https://novabelluno.com.br${forbidden}`)) {
+    const url = `https://novabelluno.com.br${forbidden}`;
+    if (locs.includes(url)) {
       errors.push(`${path.basename(sitemapFile)}: URL não indexável incluída (${forbidden}).`);
     }
   }
