@@ -424,7 +424,13 @@
 
   .about-page__spaces-gallery {
     grid-template-columns: minmax(0, 1.45fr) minmax(300px, .75fr);
-    grid-template-rows: repeat(2, minmax(220px, 1fr));
+    /* auto na 3a linha: os quadros mantem a altura e a navegacao ocupa
+       so o espaco necessario logo abaixo. */
+    grid-template-rows: repeat(2, minmax(220px, 1fr)) auto;
+  }
+
+  .about-page__spaces-nav {
+    grid-column: 1 / -1;
   }
 
   .about-page__space-image--featured {
@@ -472,4 +478,75 @@
     animation: none;
     transition: none;
   }
+}
+
+
+/* ---------- Galeria de espaços: navegação ----------
+   As setas percorrem conjuntos de 3 fotos, reaproveitando os mesmos
+   quadros do grid em vez de alongar a página. */
+.about-page__spaces-nav {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+.about-page__spaces-arrow {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  color: var(--color-primary);
+  background: var(--color-white);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 22%, transparent);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color .25s ease, color .25s ease,
+              border-color .25s ease, transform .25s ease;
+}
+
+.about-page__spaces-arrow:hover {
+  color: var(--color-white);
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.about-page__spaces-arrow:focus-visible {
+  outline: 3px solid var(--color-primary-light);
+  outline-offset: 3px;
+}
+
+.about-page__spaces-counter {
+  min-width: 5ch;
+  color: var(--color-ink-soft);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-align: center;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Escurece os quadros durante a troca, para a imagem nova não entrar
+   de forma abrupta. O JS espera esta transição antes de trocar as fontes. */
+.about-page__spaces-gallery .about-page__space-image img,
+.about-page__spaces-gallery .about-page__space-image figcaption {
+  transition: opacity .2s ease, transform .75s cubic-bezier(.22, .61, .36, 1);
+}
+
+.about-page__spaces-gallery.is-trocando .about-page__space-image img,
+.about-page__spaces-gallery.is-trocando .about-page__space-image figcaption {
+  opacity: .25;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-page__spaces-arrow,
+  .about-page__spaces-gallery .about-page__space-image img,
+  .about-page__spaces-gallery .about-page__space-image figcaption {
+    transition: none;
+  }
+
+  .about-page__spaces-arrow:hover { transform: none; }
 }
