@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
-import { getPublishedPosts } from '../../lib/blog';
+import { getPostSlug, getPublishedPosts } from '../../lib/blog';
 import '../../styles/blog.css';
 
 const posts = await getPublishedPosts();
@@ -25,8 +25,10 @@ const jsonLd = {
       blogPost: posts.map((post) => ({
         '@type': 'BlogPosting',
         headline: post.data.title,
-        url: `https://novabelluno.com.br/blog/${post.id}/`,
+        url: `https://novabelluno.com.br/blog/${getPostSlug(post)}/`,
         datePublished: post.data.publishedAt.toISOString(),
+        dateModified: (post.data.updatedAt ?? post.data.publishedAt).toISOString(),
+        image: new URL(post.data.coverImage, 'https://novabelluno.com.br').href,
       })),
     },
     {

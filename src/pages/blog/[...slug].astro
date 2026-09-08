@@ -36,14 +36,19 @@ const title = post.data.seoTitle ?? `${post.data.title} | Nova Belluno`;
 const description = post.data.seoDescription ?? post.data.description;
 const updatedAt = post.data.updatedAt ?? post.data.publishedAt;
 const wasUpdated = updatedAt.getTime() !== post.data.publishedAt.getTime();
-const imageUrl = `https://novabelluno.com.br${post.data.coverImage}`;
+const siteUrl = Astro.site ?? new URL('https://novabelluno.com.br');
+const canonicalUrl = new URL(canonicalPath, siteUrl).href;
+const imageUrl = new URL(post.data.coverImage, siteUrl).href;
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'BlogPosting',
       '@id': `https://novabelluno.com.br${canonicalPath}#article`,
-      mainEntityOfPage: `https://novabelluno.com.br${canonicalPath}`,
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': canonicalUrl,
+      },
       headline: post.data.title,
       description,
       image: imageUrl,
@@ -65,7 +70,7 @@ const jsonLd = {
         },
       },
       articleSection: post.data.category,
-      keywords: post.data.tags.join(', '),
+      ...(post.data.tags.length > 0 ? { keywords: post.data.tags.join(', ') } : {}),
     },
     {
       '@type': 'BreadcrumbList',

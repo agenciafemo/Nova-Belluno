@@ -56,7 +56,7 @@ const jsonLd = {
       alternateName: 'Residencial Geriátrico Nova Belluno',
       url: 'https://novabelluno.com.br/',
       logo: 'https://novabelluno.com.br/assets/img/LOGOAZUL.png',
-      image: 'https://novabelluno.com.br/assets/img/hero/hero-08.webp',
+      image: 'https://novabelluno.com.br/assets/img/local/fachada-03-1280.webp',
       foundingDate: '2016',
       email: 'contato@novabelluno.com.br',
       telephone: '+55 48 99174-9986',
@@ -100,8 +100,13 @@ const jsonLd = {
   {title}
   {description}
   canonicalPath="/"
-  image="/assets/img/hero/hero-08.webp"
-  imageAlt="Pessoa idosa acompanhada durante um passeio ao ar livre"
+  image="/assets/img/local/fachada-03-1280.webp"
+  imageAlt="Entrada da unidade principal da Nova Belluno em Siderópolis"
+  preloadImage={{
+    href: '/assets/img/hero/optimized/hero-08-1280.webp',
+    srcset: '/assets/img/hero/optimized/hero-08-640.webp 640w, /assets/img/hero/optimized/hero-08-1280.webp 1280w, /assets/img/hero/optimized/hero-08-1536.webp 1536w',
+    sizes: '(max-width: 759px) 100vw, 50vw',
+  }}
   {jsonLd}
 >
   <Fragment set:html={homeMarkup} />

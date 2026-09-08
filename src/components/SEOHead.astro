@@ -10,6 +10,11 @@ interface Props {
   articleModifiedTime?: string;
   articleAuthor?: string;
   robots?: string;
+  preloadImage?: {
+    href: string;
+    srcset?: string;
+    sizes?: string;
+  };
   jsonLd?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
@@ -23,7 +28,8 @@ const {
   articlePublishedTime,
   articleModifiedTime,
   articleAuthor,
-  robots = 'index, follow',
+  robots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+  preloadImage,
   jsonLd,
 } = Astro.props;
 
@@ -37,9 +43,11 @@ const imageUrl = new URL(image, site);
 <title>{title}</title>
 <meta name="description" content={description}>
 <meta name="robots" content={robots}>
+<meta name="googlebot" content={robots}>
 <meta name="theme-color" content="#132478">
 <meta name="format-detection" content="telephone=no">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="generator" content={Astro.generator}>
 <link rel="canonical" href={canonicalUrl}>
 <link rel="alternate" hreflang="pt-BR" href={canonicalUrl}>
 <link rel="alternate" hreflang="x-default" href={canonicalUrl}>
@@ -67,6 +75,16 @@ const imageUrl = new URL(image, site);
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="Blog Nova Belluno" href="/rss.xml">
+{preloadImage && (
+  <link
+    rel="preload"
+    as="image"
+    href={preloadImage.href}
+    imagesrcset={preloadImage.srcset}
+    imagesizes={preloadImage.sizes}
+    fetchpriority="high"
+  />
+)}
 <link rel="preload" href="/assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>

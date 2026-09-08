@@ -122,6 +122,25 @@
   transform: translateY(-2px);
 }
 
+/* Abaixo de 720px as três áreas empilhavam numa coluna só, deixando o
+   rodapé muito alto. "Explore" e "Fale conosco" passam a dividir a linha,
+   com a marca ocupando a largura inteira acima. */
+@media (max-width: 719px) {
+  .site-footer__inner {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 36px 20px;
+  }
+
+  .site-footer__brand {
+    grid-column: 1 / -1;
+  }
+
+  /* O e-mail é longo e não pode estourar a coluna estreita. */
+  .site-footer__contact a {
+    overflow-wrap: anywhere;
+  }
+}
+
 @media (min-width: 720px) {
   .site-footer__inner {
     grid-template-columns: minmax(0, 1.45fr) minmax(150px, .55fr) minmax(220px, .8fr);

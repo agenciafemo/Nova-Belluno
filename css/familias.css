@@ -265,22 +265,24 @@
   font-weight: 500;
 }
 
+/* Antes este parágrafo tinha praticamente o mesmo tamanho do h2
+   (3.4rem contra 3.5rem) e max-width de 22ch, o que criava dois títulos
+   gigantes empilhados quebrando em muitas linhas. Agora ele é claramente
+   subordinado ao título e cabe em poucas linhas. */
 .familias-page__testimonial-statement {
-  max-width: 22ch;
-  margin-top: 34px;
+  max-width: 46ch;
+  margin-top: 22px;
   margin-inline: auto;
-  color: var(--color-white);
-  font-family: var(--font-heading);
-  font-size: clamp(1.8rem, 4vw, 3.4rem);
-  line-height: 1.08;
-  letter-spacing: -.03em;
+  color: color-mix(in srgb, var(--color-white) 92%, transparent);
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.55;
 }
 
 .familias-page__testimonial-meta {
-  max-width: 54ch;
-  margin: 24px auto 0;
-  color: color-mix(in srgb, var(--color-white) 70%, transparent);
-  font-size: .78rem;
+  max-width: 52ch;
+  margin: 18px auto 0;
+  color: color-mix(in srgb, var(--color-white) 66%, transparent);
+  font-size: .82rem;
   line-height: 1.6;
 }
 

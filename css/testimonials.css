@@ -185,3 +185,89 @@
     grid-column: 1 / -1;
   }
 }
+
+/* ---------- Visitas flexíveis ----------
+   Reforça, dentro da seção da família, que a visita não depende de escala.
+   É uma objeção comum de quem interna um pai: o medo do afastamento. */
+.visits-note {
+  /* O contêiner vira grid de 2 colunas no desktop; sem isso o card cai
+     sozinho na coluna esquerda da linha seguinte, deixando um vazio
+     grande à direita. Ocupando a linha inteira ele fecha a seção. */
+  grid-column: 1 / -1;
+  align-self: stretch;
+  padding: clamp(20px, 2.6vw, 28px) clamp(20px, 3vw, 32px);
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(14px, 1.8vw, 20px);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 16%, transparent);
+  border-radius: var(--radius-lg);
+  background: var(--color-beige-soft);
+}
+
+.visits-note__icon {
+  flex: none;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  color: var(--color-white);
+  background: var(--color-primary);
+  border-radius: 50%;
+}
+
+.visits-note__title {
+  margin-bottom: 6px;
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.visits-note__copy p {
+  max-width: 62ch;
+  color: var(--color-ink-soft);
+  font-size: clamp(.9rem, 1.05vw, .98rem);
+  line-height: 1.65;
+}
+
+@media (max-width: 519px) {
+  .visits-note {
+    flex-direction: column;
+    gap: 14px;
+  }
+}
+
+/* ---------- Widget de avaliações do Google (JotForm) ----------
+   Oculta a nota agregada. Esconder só o número deixaria as estrelas
+   preenchidas comunicando a mesma nota, então a linha inteira sai
+   (número + estrelas + contagem). Os depoimentos individuais seguem
+   visíveis normalmente.
+
+   As classes .jf-* são semânticas e estáveis; as .sc-* do widget são
+   hashes de styled-components e mudam a cada atualização — por isso
+   não devem ser usadas como alvo.
+
+   Alternativa mais robusta: desligar "Rating" nas configurações do
+   widget no painel do JotForm (campo show_rating). Feito isso, esta
+   regra vira redundante e pode ser removida. */
+.jf-reviews-rating-row {
+  display: none !important;
+}
+
+/* Substituto do avatar quando a foto do Google não carrega — mantém o
+   cartão íntegro em vez de deixar buraco ou ícone de imagem quebrada. */
+.jf-avatar-fallback {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-width: 36px;
+  min-height: 36px;
+  color: var(--color-white);
+  background: var(--color-primary-light);
+  border-radius: 50%;
+  font-family: var(--font-body);
+  font-size: .82rem;
+  font-weight: 700;
+  line-height: 1;
+}

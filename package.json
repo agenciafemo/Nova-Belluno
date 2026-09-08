@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "dev": "astro dev",
     "sync:blog": "node scripts/sync-blog.mjs",
     "prebuild": "npm run sync:blog",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "audit:build": "node scripts/audit-build.mjs",
+    "verify": "npm run check && npm run build && npm run audit:build"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.3",

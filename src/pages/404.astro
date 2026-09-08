@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const title = 'Página não encontrada | Nova Belluno';
+const description = 'A página que você tentou acessar não foi encontrada.';
+---
+
+<BaseLayout
+  {title}
+  {description}
+  canonicalPath="/404/"
+  robots="noindex, follow, noarchive"
+  showSkipLink={true}
+>
+  <main id="conteudo" class="not-found">
+    <p class="not-found__eyebrow">Erro 404</p>
+    <h1>Esta página não foi encontrada.</h1>
+    <p>O endereço pode ter mudado. Você pode voltar ao início ou conversar com a nossa equipe.</p>
+    <div class="not-found__actions">
+      <a class="not-found__primary" href="/">Voltar ao início</a>
+      <a class="not-found__secondary" href="/contato/">Falar com a equipe</a>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .not-found {
+    width: min(760px, calc(100% - 40px));
+    min-height: 62vh;
+    margin-inline: auto;
+    padding: clamp(7rem, 14vw, 11rem) 0 clamp(5rem, 10vw, 8rem);
+    text-align: center;
+    color: #132478;
+  }
+  .not-found__eyebrow {
+    margin: 0 0 1rem;
+    font: 700 .75rem/1.2 Inter, sans-serif;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+  h1 {
+    margin: 0;
+    font: 500 clamp(2.5rem, 7vw, 5rem)/.98 Playfair Display, serif;
+    text-wrap: balance;
+  }
+  .not-found > p:not(.not-found__eyebrow) {
+    max-width: 560px;
+    margin: 1.5rem auto 0;
+    color: #454b5d;
+    font: 400 1.05rem/1.7 Inter, sans-serif;
+  }
+  .not-found__actions {
+    display: flex;
+    justify-content: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+  }
+  .not-found__actions a {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
+    padding: .8rem 1.25rem;
+    border: 1px solid #132478;
+    border-radius: 999px;
+    font: 700 .9rem/1 Inter, sans-serif;
+    text-decoration: none;
+  }
+  .not-found__primary { background: #132478; color: #fff; }
+  .not-found__secondary { color: #132478; }
+</style>

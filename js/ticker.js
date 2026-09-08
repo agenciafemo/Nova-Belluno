@@ -8,6 +8,7 @@
   const PHRASES = [
     'Ambiente arborizado',
     '12 min do centro de Criciúma',
+    'Visitas flexíveis',
     'Equipe multidisciplinar',
     'Siderópolis · Capivari de Baixo',
   ];

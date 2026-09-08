@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { access, readFile, writeFile } from 'node:fs/promises';
+import { access, mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const url = process.env.PUBLIC_SUPABASE_URL;
@@ -25,7 +25,16 @@ const { data: posts, error } = await supabase
 
 if (error) throw new Error(`[sync:blog] Falha ao consultar artigos: ${error.message}`);
 
+await mkdir(targetDirectory, { recursive: true });
+const publishedSlugs = new Set();
+
 for (const post of posts ?? []) {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(post.slug)) {
+    console.warn(`[sync:blog] Ignorado slug inválido recebido do CMS: “${post.slug}”.`);
+    continue;
+  }
+
+  publishedSlugs.add(post.slug);
   const filePath = path.join(targetDirectory, `${post.slug}.md`);
 
   try {
@@ -64,4 +73,25 @@ for (const post of posts ?? []) {
   await writeFile(filePath, frontmatter, 'utf8');
 }
 
-console.log(`[sync:blog] ${posts?.length ?? 0} artigo(s) publicado(s) sincronizado(s).`);
+/* Remove somente arquivos comprovadamente gerados por este script. Isso evita
+   que um artigo excluído, arquivado ou despublicado no CMS continue entrando
+   no build e sendo rastreado pelos buscadores. Artigos editoriais locais nunca
+   são removidos. */
+let removedCount = 0;
+for (const entry of await readdir(targetDirectory, { withFileTypes: true })) {
+  if (!entry.isFile() || !/\.mdx?$/i.test(entry.name)) continue;
+
+  const slug = entry.name.replace(/\.mdx?$/i, '');
+  if (publishedSlugs.has(slug)) continue;
+
+  const filePath = path.join(targetDirectory, entry.name);
+  const current = await readFile(filePath, 'utf8');
+  if (!current.includes(marker)) continue;
+
+  await unlink(filePath);
+  removedCount += 1;
+}
+
+console.log(
+  `[sync:blog] ${publishedSlugs.size} artigo(s) publicado(s) sincronizado(s); ${removedCount} arquivo(s) obsoleto(s) removido(s).`,
+);

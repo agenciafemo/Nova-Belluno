@@ -138,11 +138,11 @@
 }
 
 .about__image--primary img {
-  object-position: 67% center;
+  object-position: center;
 }
 
 .about__image--secondary img {
-  object-position: 56% center;
+  object-position: center;
 }
 
 .about__carousel-next {

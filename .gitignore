@@ -6,3 +6,6 @@ supabase/.temp/
 .env.*
 !.env.example
 *.log
+
+# Originais de alta resolução mantidos apenas no acervo local.
+FOTOS/

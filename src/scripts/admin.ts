@@ -204,14 +204,71 @@ async function restoreSession() {
   if (!error && data.user) await authorize(data.user);
 }
 
+const COVER_WIDTH = 1536;
+const COVER_HEIGHT = 1024;
+const MAX_SOURCE_IMAGE_SIZE = 12 * 1024 * 1024;
+const ACCEPTED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/avif']);
+
+async function optimizeCover(file: File) {
+  if (!ACCEPTED_IMAGE_TYPES.has(file.type)) {
+    throw new Error('Use uma imagem JPG, PNG, WebP ou AVIF.');
+  }
+  if (file.size > MAX_SOURCE_IMAGE_SIZE) {
+    throw new Error('A imagem original deve ter no máximo 12 MB.');
+  }
+
+  const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+  try {
+    if (bitmap.width < 1200 || bitmap.height < 800) {
+      throw new Error('Para manter a qualidade, use uma imagem com pelo menos 1200 × 800 px.');
+    }
+
+    const targetRatio = COVER_WIDTH / COVER_HEIGHT;
+    const sourceRatio = bitmap.width / bitmap.height;
+    const sourceWidth = sourceRatio > targetRatio ? bitmap.height * targetRatio : bitmap.width;
+    const sourceHeight = sourceRatio > targetRatio ? bitmap.height : bitmap.width / targetRatio;
+    const sourceX = (bitmap.width - sourceWidth) / 2;
+    const sourceY = (bitmap.height - sourceHeight) / 2;
+    const canvas = document.createElement('canvas');
+    canvas.width = COVER_WIDTH;
+    canvas.height = COVER_HEIGHT;
+    const context = canvas.getContext('2d', { alpha: false });
+    if (!context) throw new Error('O navegador não conseguiu preparar a imagem.');
+
+    context.drawImage(
+      bitmap,
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
+      0,
+      0,
+      COVER_WIDTH,
+      COVER_HEIGHT,
+    );
+
+    const blob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (result) => result ? resolve(result) : reject(new Error('Não foi possível otimizar a imagem.')),
+        'image/webp',
+        0.82,
+      );
+    });
+    return blob;
+  } finally {
+    bitmap.close();
+  }
+}
+
 async function uploadCover(file: File, slug: string) {
   if (!supabase) throw new Error('Supabase não configurado.');
-  if (file.size > 5 * 1024 * 1024) throw new Error('A imagem deve ter no máximo 5 MB.');
+  setStatus('Otimizando a imagem de capa…');
+  const optimizedFile = await optimizeCover(file);
 
-  const extension = file.name.split('.').pop()?.toLowerCase() || 'webp';
-  const path = `covers/${slug}-${crypto.randomUUID()}.${extension}`;
-  const { error } = await supabase.storage.from('blog-media').upload(path, file, {
+  const path = `covers/${slug}-${crypto.randomUUID()}.webp`;
+  const { error } = await supabase.storage.from('blog-media').upload(path, optimizedFile, {
     cacheControl: '31536000',
+    contentType: 'image/webp',
     upsert: false,
   });
   if (error) throw error;

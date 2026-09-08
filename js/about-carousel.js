@@ -12,28 +12,28 @@
 
   const slides = [
     {
-      src: '/assets/img/hero/optimized/about-05-960.webp',
-      alt: 'Pessoa idosa acompanhada por uma profissional em uma área verde',
-      position: '67% center'
-    },
-    {
-      src: '/assets/img/hero/optimized/about-07-960.webp',
-      alt: 'Área externa arborizada e acessível da Nova Belluno',
-      position: '56% center'
-    },
-    {
-      src: '/assets/img/hero/optimized/about-03-960.webp',
-      alt: 'Caminho entre árvores e áreas verdes da Nova Belluno',
+      src: '/assets/img/local/corredor-01-960.webp',
+      alt: 'Corredor da Nova Belluno com janelões voltados para a área verde',
       position: 'center'
     },
     {
-      src: '/assets/img/hero/optimized/about-04-960.webp',
-      alt: 'Fachada e acesso principal da Nova Belluno',
+      src: '/assets/img/local/refeicao-01-960.webp',
+      alt: 'Espaço de refeições da Nova Belluno com mesa junto à janela',
       position: 'center'
     },
     {
-      src: '/assets/img/hero/optimized/about-06-960.webp',
-      alt: 'Pessoa idosa contemplando um jardim tranquilo e arborizado',
+      src: '/assets/img/local/cuidado-01-960.webp',
+      alt: 'Profissional da Nova Belluno durante atendimento a um residente',
+      position: 'center'
+    },
+    {
+      src: '/assets/img/local/capela-01-960.webp',
+      alt: 'Espaço de oração da Nova Belluno',
+      position: 'center'
+    },
+    {
+      src: '/assets/img/local/jardim-02-960.webp',
+      alt: 'Jardim da Nova Belluno com fonte e área arborizada ao fundo',
       position: 'center'
     }
   ];

@@ -29,8 +29,48 @@
     return true;
   }
 
+  /* O widget pede as fotos do Google no formato "=s120-c-rp-mo-br100",
+     que o Google recusa (as fotos aparecem quebradas). Testado: apenas o
+     sufixo de tamanho simples "=s120" responde. Normalizamos a URL de cada
+     avatar; se ainda assim falhar, o avatar é escondido em vez de exibir
+     o ícone de imagem quebrada. */
+  function corrigirAvatares() {
+    container.querySelectorAll('img[src*="googleusercontent.com"]').forEach((img) => {
+      if (img.dataset.avatarCorrigido) return;
+      img.dataset.avatarCorrigido = '1';
+
+      const simples = img.src.replace(/=s(\d+)[-\w]*$/, '=s$1');
+      if (simples !== img.src) img.src = simples;
+
+      /* Se ainda assim falhar (o Google limita rajadas de requisições),
+         troca por um círculo com a inicial em vez de esconder: o cartão
+         nunca fica com buraco nem com ícone de imagem quebrada. */
+      img.addEventListener('error', () => {
+        if (img.dataset.temFallback) return;
+        img.dataset.temFallback = '1';
+
+        const nome = (img.alt || '').trim();
+        const inicial = nome ? nome[0].toUpperCase() : '·';
+        const marcador = document.createElement('span');
+        marcador.className = 'jf-avatar-fallback';
+        marcador.setAttribute('aria-hidden', 'true');
+        marcador.textContent = inicial;
+
+        const estilo = getComputedStyle(img);
+        marcador.style.width = estilo.width;
+        marcador.style.height = estilo.height;
+
+        img.replaceWith(marcador);
+      }, { once: true });
+    });
+  }
+
+  /* Não desconecta ao carregar: o carrossel injeta mais avaliações depois,
+     e os avatares novos também precisam da correção de URL. */
+  let jaCarregou = false;
   const contentObserver = new MutationObserver(() => {
-    if (markAsLoaded()) contentObserver.disconnect();
+    corrigirAvatares();
+    if (!jaCarregou) jaCarregou = markAsLoaded();
   });
 
   contentObserver.observe(container, { childList: true, subtree: true });

@@ -13,7 +13,8 @@
 .about-page__hero-inner,
 .about-page__story-inner,
 .about-page__principles-inner,
-.about-page__units-inner {
+.about-page__units-inner,
+.about-page__spaces-inner {
   width: 100%;
   max-width: var(--container-max);
   margin: 0 auto;
@@ -277,6 +278,77 @@
   margin-top: 34px;
 }
 
+.about-page__spaces {
+  padding: clamp(66px, 7vw, 100px) var(--about-page-gutter)
+           clamp(72px, 8vw, 112px);
+  background: var(--color-beige-soft);
+}
+
+.about-page__spaces-heading {
+  display: grid;
+  gap: 30px;
+}
+
+.about-page__spaces-heading > p {
+  align-self: end;
+  max-width: 50ch;
+  color: var(--color-ink-soft);
+  font-size: 1rem;
+  line-height: 1.72;
+}
+
+.about-page__spaces-gallery {
+  margin-top: clamp(42px, 6vw, 72px);
+  display: grid;
+  gap: clamp(12px, 1.5vw, 20px);
+}
+
+.about-page__space-image {
+  position: relative;
+  min-height: 240px;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-gray-light);
+  box-shadow: 0 24px 52px -38px rgba(19, 36, 120, .48);
+}
+
+.about-page__space-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .75s cubic-bezier(.22, .61, .36, 1);
+}
+
+.about-page__space-image--featured img {
+  object-position: center 58%;
+}
+
+.about-page__space-image:hover img {
+  transform: scale(1.025);
+}
+
+.about-page__space-image::after {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 42%;
+  background: linear-gradient(to top, rgba(8, 19, 71, .62), transparent);
+  pointer-events: none;
+}
+
+.about-page__space-image figcaption {
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  left: 20px;
+  z-index: 1;
+  color: var(--color-white);
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
 @media (min-width: 760px) {
   .about-page__principles-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -322,7 +394,8 @@
 
   .about-page__story-inner,
   .about-page__principles-heading,
-  .about-page__units-intro {
+  .about-page__units-intro,
+  .about-page__spaces-heading {
     grid-template-columns: minmax(0, 1fr) minmax(340px, .72fr);
     align-items: start;
   }
@@ -347,6 +420,16 @@
 
   .about-page__principles-list li + li {
     border-left: 1px solid var(--color-beige);
+  }
+
+  .about-page__spaces-gallery {
+    grid-template-columns: minmax(0, 1.45fr) minmax(300px, .75fr);
+    grid-template-rows: repeat(2, minmax(220px, 1fr));
+  }
+
+  .about-page__space-image--featured {
+    grid-row: 1 / 3;
+    min-height: 580px;
   }
 }
 
@@ -384,7 +467,9 @@
 
 @media (prefers-reduced-motion: reduce) {
   .about-page__hero-image,
-  .about-page__story-year {
+  .about-page__story-year,
+  .about-page__space-image img {
     animation: none;
+    transition: none;
   }
 }

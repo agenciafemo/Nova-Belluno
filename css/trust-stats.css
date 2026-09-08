@@ -37,9 +37,13 @@
   transform-origin: center;
 }
 
+/* Sao 3 indicadores. Em 2 colunas o terceiro ficaria orfao numa linha
+   sozinha; em 4 colunas sobrava uma coluna vazia à direita, jogando o
+   grupo para a esquerda. Empilha no mobile e vira 3 colunas cheias
+   a partir de 760px. */
 .trust-stats__list {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -54,11 +58,7 @@
   text-align: center;
 }
 
-.trust-stats__item:nth-child(odd) {
-  border-right: 1px solid var(--color-beige);
-}
-
-.trust-stats__item:nth-child(-n + 2) {
+.trust-stats__item:not(:last-child) {
   border-bottom: 1px solid var(--color-beige);
 }
 
@@ -110,16 +110,16 @@
   }
 }
 
-@media (min-width: 960px) {
+@media (min-width: 760px) {
   .trust-stats__list {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .trust-stats__item {
     padding-block: clamp(16px, 1.8vw, 24px);
   }
 
-  .trust-stats__item:nth-child(n) {
+  .trust-stats__item {
     border-bottom: 0;
   }
 
@@ -127,23 +127,4 @@
     border-right: 1px solid var(--color-beige);
   }
 
-  .trust-stats__item:last-child {
-    border-right: 0;
-  }
-
-}
-
-@media (max-width: 359px) {
-  .trust-stats__list {
-    grid-template-columns: 1fr;
-  }
-
-  .trust-stats__item:nth-child(n) {
-    border-right: 0;
-    border-bottom: 1px solid var(--color-beige);
-  }
-
-  .trust-stats__item:last-child {
-    border-bottom: 0;
-  }
 }

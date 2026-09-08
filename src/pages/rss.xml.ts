@@ -26,14 +26,19 @@ export const GET: APIRoute = async ({ site }) => {
       </item>`;
   }).join('');
 
+  const lastBuildDate = posts[0]
+    ? (posts[0].data.updatedAt ?? posts[0].data.publishedAt).toUTCString()
+    : new Date().toUTCString();
+  const feedUrl = new URL('/rss.xml', base).href;
   const body = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blog Nova Belluno</title>
     <link>${xml(new URL('/blog/', base).href)}</link>
+    <atom:link href="${xml(feedUrl)}" rel="self" type="application/rss+xml" />
     <description>Conteúdos sobre cuidado, convivência, família e bem-estar na terceira idade.</description>
     <language>pt-BR</language>
-    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>${items}
+    <lastBuildDate>${lastBuildDate}</lastBuildDate>${items}
   </channel>
 </rss>`;
 

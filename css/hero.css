@@ -511,19 +511,22 @@ body {
    texto acompanha exatamente a linha, inclinando junto nas subidas/descidas.
 
    Restrição geométrica: a amplitude precisa ser <= metade da espessura,
-   senão a fita deixa de cobrir a borda reta da imagem e aparecem brechas. */
+   senão a fita deixa de cobrir a borda reta da imagem e aparecem brechas.
+
+   Amplitude 0 = faixa reta: o path vira uma linha horizontal, a fita vira
+   uma barra reta e o texto corre na horizontal. Toda a matemática de
+   sobreposição continua válida (o termo da amplitude apenas zera), então
+   basta voltar a amplitude para reativar a ondulação. */
 :root {
   --band-thickness: 50px;
-  --band-amplitude: 21px;
-  /* Uma curva ampla funciona melhor na largura reduzida do celular e
-     preserva o aspecto orgânico sem comprimir vários ciclos na tela. */
+  --band-amplitude: 0px;
   --band-cycles: 1.2;
 }
 
 @media (min-width: 640px) {
   :root {
     --band-thickness: 62px;
-    --band-amplitude: 29px;
+    --band-amplitude: 0px;
     --band-cycles: 2.8;
   }
 }
@@ -540,7 +543,12 @@ body {
 .ticker-svg {
   display: block;
   width: 100%;
-  overflow: visible;
+  /* O path é desenhado com meia-onda extra de cada lado para a fita não
+     terminar em corte reto. Com overflow visible esse excedente virava
+     área rolável (rolagem lateral no mobile). O recorte padrão do SVG
+     resolve: o excedente some na borda, que é justamente o efeito
+     desejado, e a fita continua cabendo na altura do viewBox. */
+  overflow: hidden;
 }
 
 .ticker-ribbon {

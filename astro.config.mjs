@@ -7,6 +7,11 @@ export default defineConfig({
   build: { format: 'directory' },
   trailingSlash: 'always',
   integrations: [sitemap({
-    filter: (page) => !page.includes('/admin/') && !page.endsWith('/servicos/'),
+    filter: (page) => {
+      const pathname = new URL(page).pathname;
+      return !pathname.startsWith('/admin/')
+        && pathname !== '/404/'
+        && pathname !== '/servicos/';
+    },
   })],
 });
