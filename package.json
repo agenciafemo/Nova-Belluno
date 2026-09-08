@@ -17,9 +17,9 @@
     "verify": "npm run check && npm run build && npm run audit:build"
   },
   "dependencies": {
-    "@astrojs/sitemap": "3.7.3",
+    "@astrojs/sitemap": "3.7.4",
     "@supabase/supabase-js": "2.112.4",
-    "astro": "7.2.4"
+    "astro": "7.3.1"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
