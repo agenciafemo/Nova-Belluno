@@ -315,6 +315,13 @@
   border-top: 1px solid var(--color-beige);
 }
 
+.blog-article__topics {
+  margin-top: 12px;
+  color: var(--color-ink-soft);
+  font-size: .72rem;
+  line-height: 1.55;
+}
+
 .blog-article__cover {
   width: min(calc(100% - 40px), var(--container-max));
   max-height: 700px;

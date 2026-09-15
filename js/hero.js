@@ -2,6 +2,9 @@
   const slideshow = document.getElementById('hero-slideshow');
   const dotsWrap = document.getElementById('hero-dots');
   const valueLabel = document.getElementById('hero-value');
+  const media = slideshow?.closest('.hero__media');
+  const arrows = media?.querySelectorAll('[data-hero-direction]') || [];
+  const status = media?.querySelector('.hero__carousel-status');
   if (!slideshow || !dotsWrap) return;
 
   const slides = [...slideshow.querySelectorAll('.hero__slide')];
@@ -11,6 +14,8 @@
   let timer = null;
   let isVisible = true;
   let requested = 0;
+  let isHovered = false;
+  let isFocused = false;
   const INTERVAL = 7000;
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const VALUES = [
@@ -27,10 +32,9 @@
   slides.forEach((_, i) => {
     const dot = document.createElement('button');
     dot.type = 'button';
-    dot.setAttribute('role', 'tab');
     dot.setAttribute('aria-label', `Ir para imagem ${i + 1} — ${VALUES[i]}`);
     if (i === 0) dot.classList.add('is-active');
-    dot.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+    if (i === 0) dot.setAttribute('aria-current', 'true');
     dot.addEventListener('click', () => void goTo(i, true));
     dotsWrap.appendChild(dot);
   });
@@ -59,7 +63,8 @@
   }
 
   async function goTo(index, isManual) {
-    requested = index;
+    const request = ++requested;
+    if (isManual) clearTimeout(timer);
     const image = hydrateSlide(index);
 
     if (image && !image.complete) {
@@ -71,16 +76,21 @@
       }
     }
 
-    if (requested !== index) return;
+    if (requested !== request) return;
     slides[current].classList.remove('is-active');
+    slides[current].setAttribute('aria-hidden', 'true');
     dots[current].classList.remove('is-active');
-    dots[current].setAttribute('aria-selected', 'false');
+    dots[current].removeAttribute('aria-current');
     current = index;
     slides[current].classList.add('is-active');
+    slides[current].removeAttribute('aria-hidden');
     dots[current].classList.add('is-active');
-    dots[current].setAttribute('aria-selected', 'true');
+    dots[current].setAttribute('aria-current', 'true');
     updateValue(current);
-    if (isManual) schedule();
+    if (isManual) {
+      if (status) status.textContent = `Imagem ${current + 1} de ${slides.length}: ${slides[current].querySelector('img')?.alt || VALUES[current]}`;
+      schedule();
+    }
   }
 
   async function next() {
@@ -92,9 +102,31 @@
     clearTimeout(timer);
     timer = null;
 
-    if (reducedMotion.matches || document.hidden || !isVisible) return;
+    if (reducedMotion.matches || document.hidden || !isVisible || isHovered || isFocused) return;
     timer = window.setTimeout(() => void next(), INTERVAL);
   }
+
+  arrows.forEach((arrow) => {
+    arrow.hidden = false;
+    arrow.addEventListener('click', () => {
+      const direction = Number(arrow.dataset.heroDirection);
+      void goTo((current + direction + slides.length) % slides.length, true);
+    });
+  });
+
+  media?.addEventListener('keydown', (event) => {
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    const direction = event.key === 'ArrowLeft' ? -1 : 1;
+    void goTo((current + direction + slides.length) % slides.length, true);
+  });
+  media?.addEventListener('pointerenter', () => { isHovered = true; schedule(); });
+  media?.addEventListener('pointerleave', () => { isHovered = false; schedule(); });
+  media?.addEventListener('focusin', () => { isFocused = true; schedule(); });
+  media?.addEventListener('focusout', (event) => {
+    isFocused = media.contains(event.relatedTarget);
+    schedule();
+  });
 
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(([entry]) => {

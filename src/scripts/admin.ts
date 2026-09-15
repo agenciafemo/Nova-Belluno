@@ -1,5 +1,6 @@
 import type { User } from '@supabase/supabase-js';
 import { isSupabaseConfigured, supabase } from '../lib/supabase-browser';
+import { getEditorialFeedback } from '../lib/editorial.mjs';
 
 type PostStatus = 'draft' | 'published' | 'archived';
 type AdminRole = 'editor' | 'admin';
@@ -69,6 +70,37 @@ function updateCounters() {
     const input = document.getElementById(counter.dataset.counter ?? '') as HTMLInputElement | HTMLTextAreaElement | null;
     counter.textContent = String(input?.value.length ?? 0);
   });
+  updateEditorialPreview();
+}
+
+function readEditorialInput() {
+  return {
+    title: titleInput.value.trim(),
+    slug: slugInput.value.trim(),
+    description: byId<HTMLTextAreaElement>('post-description').value.trim(),
+    body: byId<HTMLTextAreaElement>('post-body').value.trim(),
+    author: byId<HTMLInputElement>('post-author').value.trim(),
+    coverImage: coverFileInput.files?.length ? '/pending-upload.webp' : coverImageInput.value.trim(),
+    coverAlt: byId<HTMLInputElement>('post-cover-alt').value.trim(),
+    seoTitle: byId<HTMLInputElement>('post-seo-title').value.trim(),
+    seoDescription: byId<HTMLTextAreaElement>('post-seo-description').value.trim(),
+    canonicalUrl: byId<HTMLInputElement>('post-canonical').value.trim(),
+    publishing: byId<HTMLSelectElement>('post-status').value === 'published',
+  };
+}
+
+function updateEditorialPreview() {
+  const feedback = getEditorialFeedback(readEditorialInput());
+  byId<HTMLElement>('seo-preview-title').textContent = feedback.title || 'Título do artigo';
+  byId<HTMLElement>('seo-preview-url').textContent = `https://novabelluno.com.br/blog/${slugInput.value || 'url-do-artigo'}/`;
+  byId<HTMLElement>('seo-preview-description').textContent = feedback.description || 'A descrição SEO ou o resumo aparecerá aqui.';
+  const checklist = byId<HTMLUListElement>('editorial-checklist');
+  checklist.replaceChildren();
+  for (const message of [...feedback.errors, ...feedback.warnings]) {
+    const item = document.createElement('li');
+    item.textContent = message;
+    checklist.append(item);
+  }
 }
 
 function resetEditor() {
@@ -78,6 +110,8 @@ function resetEditor() {
   editorTitle.textContent = 'Novo artigo';
   editorState.textContent = 'Rascunho';
   slugWasEdited = false;
+  slugInput.readOnly = false;
+  coverImageInput.required = true;
   updateCounters();
   titleInput.focus();
 }
@@ -86,6 +120,9 @@ function fillEditor(post: BlogPostRow) {
   byId<HTMLInputElement>('post-id').value = post.id;
   titleInput.value = post.title;
   slugInput.value = post.slug;
+  slugInput.readOnly = Boolean(post.published_at);
+  coverFileInput.value = '';
+  coverImageInput.required = true;
   byId<HTMLTextAreaElement>('post-description').value = post.description;
   byId<HTMLInputElement>('post-author').value = post.author;
   byId<HTMLSelectElement>('post-category').value = post.category;
@@ -95,6 +132,7 @@ function fillEditor(post: BlogPostRow) {
   byId<HTMLInputElement>('post-cover-alt').value = post.cover_alt;
   byId<HTMLInputElement>('post-seo-title').value = post.seo_title ?? '';
   byId<HTMLTextAreaElement>('post-seo-description').value = post.seo_description ?? '';
+  byId<HTMLInputElement>('post-canonical').value = post.canonical_url ?? '';
   byId<HTMLSelectElement>('post-status').value = post.status;
   byId<HTMLInputElement>('post-featured').checked = post.featured;
   editorTitle.textContent = 'Editar artigo';
@@ -144,7 +182,7 @@ function renderPosts() {
           setStatus(`Não foi possível excluir: ${error.message}`, 'error');
           return;
         }
-        setStatus('Artigo excluído.', 'success');
+        setStatus('Artigo excluído do banco. A remoção do site acontecerá após a próxima publicação do site.', 'success');
         await loadPosts();
         resetEditor();
       });
@@ -305,11 +343,16 @@ editorForm.addEventListener('submit', async (event) => {
 
   try {
     const form = new FormData(editorForm);
+    const feedback = getEditorialFeedback(readEditorialInput());
+    if (feedback.errors.length) throw new Error(feedback.errors.join(' '));
     const slug = String(form.get('slug') ?? '').trim();
+    const existing = posts.find((post) => post.id === String(form.get('id')));
+    if (existing?.published_at && existing.slug !== slug) {
+      throw new Error('A URL de um artigo já publicado não pode ser alterada pelo painel. Solicite um redirecionamento à equipe técnica.');
+    }
     const selectedFile = coverFileInput.files?.[0];
     const coverImage = selectedFile ? await uploadCover(selectedFile, slug) : String(form.get('cover_image') ?? '').trim();
     const statusValue = String(form.get('status')) as PostStatus;
-    const existing = posts.find((post) => post.id === String(form.get('id')));
 
     const payload = {
       slug,
@@ -325,8 +368,8 @@ editorForm.addEventListener('submit', async (event) => {
       status: statusValue,
       seo_title: String(form.get('seo_title') ?? '').trim() || null,
       seo_description: String(form.get('seo_description') ?? '').trim() || null,
-      canonical_url: null,
-      published_at: statusValue === 'published' ? existing?.published_at ?? new Date().toISOString() : null,
+      canonical_url: String(form.get('canonical_url') ?? '').trim() || null,
+      published_at: existing?.published_at ?? (statusValue === 'published' ? new Date().toISOString() : null),
       updated_at: new Date().toISOString(),
     };
 
@@ -338,7 +381,9 @@ editorForm.addEventListener('submit', async (event) => {
     if (result.error) throw result.error;
     coverImageInput.value = coverImage;
     coverFileInput.value = '';
-    setStatus(statusValue === 'published' ? 'Artigo publicado com sucesso.' : 'Rascunho salvo com sucesso.', 'success');
+    setStatus(statusValue === 'published'
+      ? 'Artigo salvo como publicado no banco. Ficará disponível após a próxima publicação do site.'
+      : 'Alteração salva no banco. Se o artigo estava no site, a retirada acontecerá após a próxima publicação do site.', 'success');
     await loadPosts();
     const saved = posts.find((post) => post.id === result.data.id);
     if (saved) fillEditor(saved);
@@ -354,6 +399,10 @@ titleInput.addEventListener('input', () => {
   if (!slugWasEdited) slugInput.value = slugify(titleInput.value);
 });
 editorForm.addEventListener('input', updateCounters);
+coverFileInput.addEventListener('change', () => {
+  coverImageInput.required = !coverFileInput.files?.length;
+  updateCounters();
+});
 byId<HTMLButtonElement>('admin-new-post').addEventListener('click', resetEditor);
 byId<HTMLButtonElement>('admin-logout').addEventListener('click', async () => {
   if (!supabase) return;

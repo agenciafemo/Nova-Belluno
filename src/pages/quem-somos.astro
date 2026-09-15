@@ -17,7 +17,7 @@ const spacesSets = [
     { nome: 'detalhe-01', legenda: 'Cuidado nos detalhes', alt: 'Cesta de frutas frescas em uma varanda voltada para a área verde' },
   ],
   [
-    { nome: 'refeicao-01', legenda: 'Espaço de refeições', alt: 'Espaço de refeições da Nova Belluno com mesa junto à janela' },
+    { nome: 'recepcao-02', legenda: 'Recepção acolhedora', alt: 'Recepção da Nova Belluno com área de espera acolhedora' },
     { nome: 'capela-01', legenda: 'Espaço de oração', alt: 'Espaço de oração da Nova Belluno' },
     { nome: 'quarto-04', legenda: 'Conforto no descanso', alt: 'Quarto da Nova Belluno com cama, poltrona de acompanhante e janela' },
   ],
@@ -153,6 +153,32 @@ const jsonLd = {
       </div>
     </section>
 
+    <section class="about-page__identity" aria-labelledby="about-identity-title">
+      <div class="about-page__identity-inner">
+        <header class="about-page__section-heading">
+          <p>Nossa identidade</p>
+          <h2 id="about-identity-title">Missão, visão e valores</h2>
+        </header>
+        <div class="about-page__identity-grid">
+          <article>
+            <span aria-hidden="true">01</span>
+            <h3>Missão</h3>
+            <p>Acolher pessoas idosas com respeito às suas histórias, oferecendo cuidado próximo, ambiente seguro e diálogo constante com as famílias.</p>
+          </article>
+          <article>
+            <span aria-hidden="true">02</span>
+            <h3>Visão</h3>
+            <p>Aprimorar continuamente o cuidado e ser referência regional em acolhimento humanizado à pessoa idosa.</p>
+          </article>
+          <article>
+            <span aria-hidden="true">03</span>
+            <h3>Valores</h3>
+            <p>Respeito à individualidade, responsabilidade no cuidado, escuta, transparência, proximidade com a família e valorização do bem-estar.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <section class="about-page__principles" aria-labelledby="about-principles-title">
       <div class="about-page__principles-inner">
         <header class="about-page__principles-heading">
@@ -162,7 +188,7 @@ const jsonLd = {
           </div>
           <p>
             Um cuidado consistente nasce da atenção à pessoa, aos seus vínculos
-            e ao ambiente que participa de sua rotina.
+            e ao ambiente que faz parte de sua rotina.
           </p>
         </header>
 
@@ -307,7 +333,7 @@ const jsonLd = {
           </div>
         </div>
 
-        <script type="application/json" data-spaces-sets set:html={JSON.stringify(spacesSets)} />
+        <script type="application/json" is:inline data-spaces-sets set:html={JSON.stringify(spacesSets)} />
 
       </div>
     </section>

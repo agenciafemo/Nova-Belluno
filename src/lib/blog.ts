@@ -7,13 +7,15 @@ export function getPostSlug(post: BlogPost): string {
 }
 
 export function getReadingTime(post: BlogPost): number {
-  const words = (post.body ?? '')
+  return Math.max(1, Math.ceil(getPostWordCount(post) / 200));
+}
+
+export function getPostWordCount(post: BlogPost): number {
+  return (post.body ?? '')
     .replace(/[#>*_`\[\]()!-]/g, ' ')
     .trim()
     .split(/\s+/)
     .filter(Boolean).length;
-
-  return Math.max(1, Math.ceil(words / 200));
 }
 
 export function formatPostDate(date: Date): string {
@@ -26,7 +28,8 @@ export function formatPostDate(date: Date): string {
 }
 
 export async function getPublishedPosts(): Promise<BlogPost[]> {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const now = Date.now();
+  const posts = await getCollection('blog', ({ data }) => !data.draft && data.publishedAt.getTime() <= now);
 
   return posts.sort(
     (first, second) => second.data.publishedAt.getTime() - first.data.publishedAt.getTime(),

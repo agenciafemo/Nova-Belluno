@@ -17,11 +17,6 @@
       position: 'center'
     },
     {
-      src: '/assets/img/local/refeicao-01-960.webp',
-      alt: 'Espaço de refeições da Nova Belluno com mesa junto à janela',
-      position: 'center'
-    },
-    {
       src: '/assets/img/local/cuidado-01-960.webp',
       alt: 'Profissional da Nova Belluno durante atendimento a um residente',
       position: 'center'

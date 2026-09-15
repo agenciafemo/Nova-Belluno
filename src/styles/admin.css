@@ -224,6 +224,27 @@ button:disabled { cursor: wait; opacity: .55; }
 
 [hidden] { display: none !important; }
 
+.admin-seo-preview,
+.admin-editorial-guidance {
+  grid-column: 1 / -1;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--color-beige);
+  border-radius: var(--radius-sm);
+  background: var(--color-beige-soft);
+  font-size: .85rem;
+  line-height: 1.65;
+  overflow-wrap: anywhere;
+}
+.admin-seo-preview h3,
+.admin-editorial-guidance h3 { margin-bottom: 12px; color: var(--color-primary); font-size: .9rem; }
+.admin-seo-preview__url { color: #295b42; font-size: .78rem; }
+.admin-seo-preview__title { color: var(--color-primary); font-size: 1.15rem; font-weight: 600; }
+.admin-seo-preview small { display: block; margin-top: 14px; color: var(--color-ink-soft); }
+.admin-editorial-guidance ul { padding-left: 20px; margin-bottom: 16px; list-style: disc; }
+.admin-editorial-guidance p + p { margin-top: 12px; }
+.admin-prefix input:read-only { cursor: default; color: var(--color-ink-soft); }
+
 @media (min-width: 860px) {
   .admin-login { grid-template-columns: minmax(0, 1fr) minmax(340px, .75fr); }
   .admin-grid { grid-template-columns: minmax(230px, .32fr) minmax(0, 1fr); align-items: start; }

@@ -1,6 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 import { access, mkdir, readdir, readFile, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { getEditorialFeedback } from '../src/lib/editorial.mjs';
+
+// Astro reads .env later, but this script runs before Astro starts.
+try {
+  process.loadEnvFile('.env');
+} catch (error) {
+  if (error.code !== 'ENOENT') throw error;
+}
 
 const url = process.env.PUBLIC_SUPABASE_URL;
 const key = process.env.PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -18,12 +26,25 @@ const supabase = createClient(url, key, {
 
 const { data: posts, error } = await supabase
   .from('blog_posts')
-  .select('slug,title,description,author,category,tags,cover_image,cover_alt,featured,seo_title,seo_description,published_at,updated_at,body_markdown')
+  .select('slug,title,description,author,category,tags,cover_image,cover_alt,featured,seo_title,seo_description,canonical_url,published_at,updated_at,body_markdown')
   .eq('status', 'published')
   .lte('published_at', new Date().toISOString())
   .order('published_at', { ascending: false });
 
 if (error) throw new Error(`[sync:blog] Falha ao consultar artigos: ${error.message}`);
+
+// Validate the whole response before touching files: a bad article must fail
+// the build rather than publish unsafe HTML or remove valid generated pages.
+for (const post of posts ?? []) {
+  const feedback = getEditorialFeedback({
+    title: post.title, slug: post.slug, description: post.description,
+    body: post.body_markdown, author: post.author, coverImage: post.cover_image,
+    coverAlt: post.cover_alt, seoTitle: post.seo_title ?? '',
+    seoDescription: post.seo_description ?? '', canonicalUrl: post.canonical_url ?? '',
+    publishing: true,
+  });
+  if (feedback.errors.length) throw new Error(`[sync:blog] Artigo “${post.slug}” inválido: ${feedback.errors.join(' ')}`);
+}
 
 await mkdir(targetDirectory, { recursive: true });
 const publishedSlugs = new Set();
@@ -63,6 +84,7 @@ for (const post of posts ?? []) {
     'draft: false',
     ...(post.seo_title ? [`seoTitle: ${JSON.stringify(post.seo_title)}`] : []),
     ...(post.seo_description ? [`seoDescription: ${JSON.stringify(post.seo_description)}`] : []),
+    ...(post.canonical_url ? [`canonicalUrl: ${JSON.stringify(post.canonical_url)}`] : []),
     '---',
     marker,
     '',

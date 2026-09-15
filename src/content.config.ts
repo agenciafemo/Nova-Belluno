@@ -24,6 +24,7 @@ const blog = defineCollection({
     draft: z.boolean().default(false),
     seoTitle: z.string().max(70).optional(),
     seoDescription: z.string().max(180).optional(),
+    canonicalUrl: z.url({ protocol: /^https$/ }).optional(),
   }),
 });
 

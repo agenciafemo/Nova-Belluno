@@ -7,6 +7,7 @@ import BlogCard from '../../components/BlogCard.astro';
 import {
   formatPostDate,
   getPostSlug,
+  getPostWordCount,
   getPublishedPosts,
   getReadingTime,
   getRelatedPosts,
@@ -37,14 +38,14 @@ const description = post.data.seoDescription ?? post.data.description;
 const updatedAt = post.data.updatedAt ?? post.data.publishedAt;
 const wasUpdated = updatedAt.getTime() !== post.data.publishedAt.getTime();
 const siteUrl = Astro.site ?? new URL('https://novabelluno.com.br');
-const canonicalUrl = new URL(canonicalPath, siteUrl).href;
+const canonicalUrl = post.data.canonicalUrl ?? new URL(canonicalPath, siteUrl).href;
 const imageUrl = new URL(post.data.coverImage, siteUrl).href;
 const jsonLd = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'BlogPosting',
-      '@id': `https://novabelluno.com.br${canonicalPath}#article`,
+      '@id': `${canonicalUrl}#article`,
       mainEntityOfPage: {
         '@type': 'WebPage',
         '@id': canonicalUrl,
@@ -55,10 +56,12 @@ const jsonLd = {
       datePublished: post.data.publishedAt.toISOString(),
       dateModified: updatedAt.toISOString(),
       inLanguage: 'pt-BR',
+      isAccessibleForFree: true,
+      wordCount: getPostWordCount(post),
       author: {
-        '@type': 'Organization',
+        '@type': post.data.author === 'Equipe Nova Belluno' ? 'Organization' : 'Person',
         name: post.data.author,
-        url: 'https://novabelluno.com.br/',
+        ...(post.data.author === 'Equipe Nova Belluno' ? { url: 'https://novabelluno.com.br/' } : {}),
       },
       publisher: {
         '@type': 'Organization',
@@ -88,7 +91,7 @@ const jsonLd = {
 <BaseLayout
   {title}
   {description}
-  {canonicalPath}
+  canonicalPath={canonicalUrl}
   bodyClass="internal-page blog-article"
   headerVariant="inner"
   activePage="blog"
@@ -121,6 +124,9 @@ const jsonLd = {
             {wasUpdated && <time datetime={updatedAt.toISOString()}>Atualizado em {formatPostDate(updatedAt)}</time>}
             <span>{getReadingTime(post)} min de leitura</span>
           </div>
+          {post.data.tags.length > 0 && (
+            <p class="blog-article__topics">Temas: {post.data.tags.join(' · ')}</p>
+          )}
         </div>
       </header>
 

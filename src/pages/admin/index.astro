@@ -71,17 +71,20 @@ const description = 'Área restrita para gestão editorial do blog Nova Belluno.
           </div>
 
           <p class="admin-editor__publish-note">
-            Ao publicar, o artigo entra no site após a conclusão do próximo rebuild.
+            Salvar altera o banco. O artigo, o sitemap e o RSS são atualizados no
+            site após a próxima publicação do site. O processo automático precisa
+            estar configurado na hospedagem.
           </p>
 
           <div class="admin-field admin-field--wide">
             <label for="post-title">Título</label>
-            <input id="post-title" name="title" maxlength="120" required>
+            <input id="post-title" name="title" minlength="10" maxlength="120" required>
           </div>
 
           <div class="admin-field admin-field--wide">
             <label for="post-slug">URL amigável</label>
             <div class="admin-prefix"><span>/blog/</span><input id="post-slug" name="slug" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required></div>
+            <small>Depois da primeira publicação, a URL fica protegida para preservar os links existentes.</small>
           </div>
 
           <div class="admin-field admin-field--wide">
@@ -113,7 +116,7 @@ const description = 'Área restrita para gestão editorial do blog Nova Belluno.
           <div class="admin-field admin-field--wide">
             <label for="post-body">Conteúdo em Markdown</label>
             <textarea id="post-body" name="body_markdown" rows="18" minlength="100" required></textarea>
-            <small>Use subtítulos claros, listas úteis e informações verificáveis.</small>
+            <small>Use ## para subtítulos. Responda às dúvidas com clareza e inclua fontes quando necessário. HTML e scripts não são permitidos.</small>
           </div>
 
           <div class="admin-field">
@@ -152,6 +155,27 @@ const description = 'Área restrita para gestão editorial do blog Nova Belluno.
             <textarea id="post-seo-description" name="seo_description" rows="3" maxlength="180"></textarea>
             <small><span data-counter="post-seo-description">0</span>/180</small>
           </div>
+
+          <div class="admin-field admin-field--wide">
+            <label for="post-canonical">URL canônica <small>(opcional, uso avançado)</small></label>
+            <input id="post-canonical" name="canonical_url" type="url" placeholder="https://...">
+            <small>Deixe vazio para usar a URL do artigo. Preencha somente quando este texto reproduzir um conteúdo original de outra URL.</small>
+          </div>
+
+          <section class="admin-seo-preview" aria-labelledby="seo-preview-heading">
+            <h3 id="seo-preview-heading">Prévia de busca</h3>
+            <p id="seo-preview-url" class="admin-seo-preview__url"></p>
+            <p id="seo-preview-title" class="admin-seo-preview__title"></p>
+            <p id="seo-preview-description"></p>
+            <small>Simulação: Google e outros buscadores podem exibir títulos e descrições diferentes.</small>
+          </section>
+
+          <section class="admin-editorial-guidance" aria-labelledby="editorial-guidance-heading">
+            <h3 id="editorial-guidance-heading">Revisão editorial e técnica</h3>
+            <ul id="editorial-checklist"></ul>
+            <p>Confira ortografia, autoria, serviços disponíveis em cada unidade e fontes. Conteúdos de saúde devem passar por revisão profissional. Não repita palavras-chave artificialmente nem acrescente informações ocultas que contradigam o texto.</p>
+            <p>O site gera automaticamente datas, idioma, dados do artigo, breadcrumbs, compartilhamento, sitemap e RSS. Essas informações auxiliam os buscadores, mas não garantem indexação ou citações por IA.</p>
+          </section>
 
           <div class="admin-editor__footer">
             <label class="admin-check"><input id="post-featured" name="featured" type="checkbox"> Destacar no blog</label>

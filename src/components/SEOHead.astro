@@ -89,4 +89,4 @@ const imageUrl = new URL(image, site);
 <link rel="preload" href="/assets/fonts/playfair-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/playfair-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 
-{jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />}
+{jsonLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd).replaceAll('<', '\\u003c')} />}
