@@ -41,6 +41,8 @@ const editorTitle = byId<HTMLHeadingElement>('editor-title');
 const editorState = byId<HTMLSpanElement>('editor-state');
 const titleInput = byId<HTMLInputElement>('post-title');
 const slugInput = byId<HTMLInputElement>('post-slug');
+const bodyInput = byId<HTMLTextAreaElement>('post-body');
+const markdownToolbar = byId<HTMLDivElement>('admin-format-toolbar');
 const coverFileInput = byId<HTMLInputElement>('post-cover-file');
 const coverImageInput = byId<HTMLInputElement>('post-cover-image');
 const saveButton = byId<HTMLButtonElement>('admin-save-post');
@@ -63,6 +65,83 @@ function slugify(value: string) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 90);
+}
+
+function notifyBodyChange(selectionStart: number, selectionEnd = selectionStart) {
+  bodyInput.focus();
+  bodyInput.setSelectionRange(selectionStart, selectionEnd);
+  bodyInput.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function wrapBodySelection(open: string, close: string, placeholder: string) {
+  const start = bodyInput.selectionStart;
+  const end = bodyInput.selectionEnd;
+  const selected = bodyInput.value.slice(start, end) || placeholder;
+  bodyInput.setRangeText(`${open}${selected}${close}`, start, end, 'end');
+  notifyBodyChange(start + open.length, start + open.length + selected.length);
+}
+
+function insertBodyBlock(
+  formatLine: (line: string, index: number) => string,
+  placeholder: string,
+) {
+  const start = bodyInput.selectionStart;
+  const end = bodyInput.selectionEnd;
+  const selected = bodyInput.value.slice(start, end) || placeholder;
+  const leadingBreak = start > 0 && bodyInput.value[start - 1] !== '\n' ? '\n' : '';
+  const trailingBreak = end < bodyInput.value.length && bodyInput.value[end] !== '\n' ? '\n' : '';
+  const formatted = selected.split('\n').map(formatLine).join('\n');
+  const replacement = `${leadingBreak}${formatted}${trailingBreak}`;
+  bodyInput.setRangeText(replacement, start, end, 'end');
+  const selectionStart = start + leadingBreak.length;
+  notifyBodyChange(selectionStart, selectionStart + formatted.length);
+}
+
+function insertLink() {
+  const start = bodyInput.selectionStart;
+  const end = bodyInput.selectionEnd;
+  const selected = bodyInput.value.slice(start, end) || 'texto do link';
+  const replacement = `[${selected}](https://)`;
+  bodyInput.setRangeText(replacement, start, end, 'end');
+  if (start === end) {
+    notifyBodyChange(start + 1, start + 1 + selected.length);
+    return;
+  }
+  const cursor = start + replacement.length - 1;
+  notifyBodyChange(cursor);
+}
+
+function applyMarkdownAction(action: string) {
+  switch (action) {
+    case 'article-title':
+      titleInput.focus();
+      titleInput.select();
+      break;
+    case 'heading-2':
+      insertBodyBlock((line) => `## ${line.replace(/^#{1,6}\s+/, '')}`, 'Novo subtítulo');
+      break;
+    case 'heading-3':
+      insertBodyBlock((line) => `### ${line.replace(/^#{1,6}\s+/, '')}`, 'Novo subtítulo');
+      break;
+    case 'bold':
+      wrapBodySelection('**', '**', 'texto em negrito');
+      break;
+    case 'italic':
+      wrapBodySelection('_', '_', 'texto em itálico');
+      break;
+    case 'link':
+      insertLink();
+      break;
+    case 'quote':
+      insertBodyBlock((line) => `> ${line.replace(/^>\s?/, '')}`, 'Texto da citação');
+      break;
+    case 'bullet-list':
+      insertBodyBlock((line) => `- ${line.replace(/^[-*+]\s+/, '')}`, 'Item da lista');
+      break;
+    case 'numbered-list':
+      insertBodyBlock((line, index) => `${index + 1}. ${line.replace(/^\d+[.)]\s+/, '')}`, 'Item da lista');
+      break;
+  }
 }
 
 function updateCounters() {
@@ -327,7 +406,7 @@ loginForm.addEventListener('submit', async (event) => {
   if (button) button.disabled = false;
 
   if (error || !data.user) {
-    setStatus('E-mail ou senha inválidos.', 'error');
+    setStatus('Não foi possível entrar. Confira a senha e tente novamente.', 'error');
     return;
   }
 
@@ -398,6 +477,18 @@ slugInput.addEventListener('input', () => { slugWasEdited = true; });
 titleInput.addEventListener('input', () => {
   if (!slugWasEdited) slugInput.value = slugify(titleInput.value);
 });
+markdownToolbar.addEventListener('click', (event) => {
+  const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-markdown-action]');
+  if (button) applyMarkdownAction(button.dataset.markdownAction ?? '');
+});
+bodyInput.addEventListener('keydown', (event) => {
+  if (!(event.ctrlKey || event.metaKey)) return;
+  const shortcuts: Record<string, string> = { b: 'bold', i: 'italic', k: 'link' };
+  const action = shortcuts[event.key.toLowerCase()];
+  if (!action) return;
+  event.preventDefault();
+  applyMarkdownAction(action);
+});
 editorForm.addEventListener('input', updateCounters);
 coverFileInput.addEventListener('change', () => {
   coverImageInput.required = !coverFileInput.files?.length;
@@ -415,9 +506,11 @@ byId<HTMLButtonElement>('admin-logout').addEventListener('click', async () => {
   setStatus('Sessão encerrada.');
 });
 
-if (!isSupabaseConfigured || !supabase) {
+const adminEmail = byId<HTMLInputElement>('admin-email').value.trim();
+
+if (!isSupabaseConfigured || !supabase || !adminEmail) {
   loginForm.querySelectorAll<HTMLInputElement | HTMLButtonElement>('input,button').forEach((element) => { element.disabled = true; });
-  setStatus('Backend preparado. Configure PUBLIC_SUPABASE_URL e PUBLIC_SUPABASE_PUBLISHABLE_KEY para ativar o acesso.', 'neutral');
+  setStatus('Backend preparado. Configure as variáveis públicas do Supabase e o e-mail administrativo para ativar o acesso.', 'neutral');
 } else {
   restoreSession();
 }

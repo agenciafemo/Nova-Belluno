@@ -6,7 +6,7 @@ O painel em `/admin/` usa autenticação por e-mail e senha do Supabase. O naveg
 
 1. Crie um projeto de produção no Supabase e guarde a senha do banco em um gerenciador de senhas.
 2. Copie `.env.example` para `.env`.
-3. Preencha `PUBLIC_SUPABASE_URL` e `PUBLIC_SUPABASE_PUBLISHABLE_KEY` em desenvolvimento e no provedor de hospedagem.
+3. Preencha `PUBLIC_SUPABASE_URL`, `PUBLIC_SUPABASE_PUBLISHABLE_KEY` e `PUBLIC_SUPABASE_ADMIN_EMAIL` em desenvolvimento e no provedor de hospedagem. O e-mail é usado internamente pelo formulário para que a tela solicite apenas a senha; ele não é tratado como segredo.
 4. Nunca exponha a `service_role` com prefixo `PUBLIC_`.
 5. Execute `npx supabase@latest login` e `npx supabase@latest link --project-ref SEU_PROJECT_REF`.
 6. Revise a diferença com `npx supabase@latest db diff --linked` e aplique `npx supabase@latest db push`.
@@ -24,7 +24,7 @@ insert into public.admin_profiles (user_id, role, display_name)
 values ('UUID_DO_USUARIO', 'admin', 'Nome do administrador');
 ```
 
-Use uma senha exclusiva com pelo menos 12 caracteres. O painel verifica a sessão e a autorização em `admin_profiles`; possuir uma conta Auth sem perfil ativo não libera o editor.
+Use uma senha exclusiva com pelo menos 8 caracteres. O painel verifica a sessão e a autorização em `admin_profiles`; possuir uma conta Auth sem perfil ativo não libera o editor.
 
 ## 3. Fluxo de publicação
 

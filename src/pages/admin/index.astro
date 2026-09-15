@@ -4,6 +4,7 @@ import '../../styles/admin.css';
 
 const title = 'Administração do blog | Nova Belluno';
 const description = 'Área restrita para gestão editorial do blog Nova Belluno.';
+const adminEmail = import.meta.env.PUBLIC_SUPABASE_ADMIN_EMAIL ?? '';
 ---
 
 <BaseLayout
@@ -31,13 +32,12 @@ const description = 'Área restrita para gestão editorial do blog Nova Belluno.
       <div>
         <p class="admin-eyebrow">Área restrita</p>
         <h1 id="admin-login-title">Acesse o blog</h1>
-        <p>Entre com o e-mail autorizado para criar, revisar e publicar conteúdos.</p>
+        <p>Digite a senha administrativa para criar, revisar e publicar conteúdos.</p>
       </div>
       <form id="admin-login-form">
-        <label for="admin-email">E-mail</label>
-        <input id="admin-email" name="email" type="email" autocomplete="username" required>
+        <input id="admin-email" name="email" type="hidden" value={adminEmail} autocomplete="username">
         <label for="admin-password">Senha</label>
-        <input id="admin-password" name="password" type="password" autocomplete="current-password" minlength="12" required>
+        <input id="admin-password" name="password" type="password" autocomplete="current-password" minlength="8" required>
         <button type="submit">Entrar</button>
       </form>
     </section>
@@ -115,8 +115,21 @@ const description = 'Área restrita para gestão editorial do blog Nova Belluno.
 
           <div class="admin-field admin-field--wide">
             <label for="post-body">Conteúdo em Markdown</label>
-            <textarea id="post-body" name="body_markdown" rows="18" minlength="100" required></textarea>
-            <small>Use ## para subtítulos. Responda às dúvidas com clareza e inclua fontes quando necessário. HTML e scripts não são permitidos.</small>
+            <div class="admin-markdown-editor">
+              <div class="admin-format-toolbar" id="admin-format-toolbar" role="toolbar" aria-label="Formatação do conteúdo">
+                <button type="button" data-markdown-action="article-title" title="Editar o H1 da página no campo Título">H1</button>
+                <button type="button" data-markdown-action="heading-2" title="Aplicar subtítulo H2">H2</button>
+                <button type="button" data-markdown-action="heading-3" title="Aplicar subtítulo H3">H3</button>
+                <button type="button" data-markdown-action="bold" title="Aplicar negrito" aria-label="Negrito"><strong>B</strong></button>
+                <button type="button" data-markdown-action="italic" title="Aplicar itálico" aria-label="Itálico"><em>I</em></button>
+                <button type="button" data-markdown-action="link" title="Inserir link">Link</button>
+                <button type="button" data-markdown-action="quote" title="Aplicar citação">Citação</button>
+                <button type="button" data-markdown-action="bullet-list" title="Criar lista com marcadores">• Lista</button>
+                <button type="button" data-markdown-action="numbered-list" title="Criar lista numerada">1. Lista</button>
+              </div>
+              <textarea id="post-body" name="body_markdown" rows="18" minlength="100" required></textarea>
+            </div>
+            <small>O campo Título é o H1 da página. Use H2 e H3 no conteúdo. HTML e scripts não são permitidos.</small>
           </div>
 
           <div class="admin-field">
