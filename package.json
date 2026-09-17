@@ -9,7 +9,9 @@
   "scripts": {
     "dev": "astro dev",
     "sync:blog": "node scripts/sync-blog.mjs",
-    "prebuild": "npm run sync:blog",
+    "sync:instagram": "node scripts/sync-instagram.mjs",
+    "instagram:refresh": "node scripts/refresh-instagram-token.mjs",
+    "prebuild": "npm run sync:blog && npm run sync:instagram",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
+    "sharp": "0.35.3",
     "typescript": "6.0.3"
   }
 }

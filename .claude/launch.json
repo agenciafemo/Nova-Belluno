@@ -2,10 +2,13 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "nova-belluno-static",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "serve", ".", "-l", "5173"],
-      "port": 5173
+      "name": "nova-belluno-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 4321
     }
   ]
 }

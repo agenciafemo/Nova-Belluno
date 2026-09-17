@@ -1,7 +1,18 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import InstagramGrid from '../components/InstagramGrid.astro';
 import homeMarkup from '../content/home.html?raw';
 import '../styles/home.css';
+
+/* A marcação da home continua preservada como HTML bruto. O grid do Instagram
+   é o primeiro trecho a virar componente porque suas imagens são baixadas no
+   build e precisam passar pelo pipeline de imagens do Astro. */
+const instagramMarker = '<!-- instagram:grid -->';
+const [homeBeforeInstagram, homeAfterInstagram] = homeMarkup.split(instagramMarker);
+
+if (homeAfterInstagram === undefined) {
+  throw new Error(`Marcador “${instagramMarker}” não encontrado em src/content/home.html.`);
+}
 
 const title = 'Nova Belluno | Residencial Geriátrico em meio à natureza';
 const description = 'Residencial Geriátrico Nova Belluno: cuidado em meio à natureza, perto de Criciúma, com hospedagem temporária ou definitiva.';
@@ -109,7 +120,9 @@ const jsonLd = {
   }}
   {jsonLd}
 >
-  <Fragment set:html={homeMarkup} />
+  <Fragment set:html={homeBeforeInstagram} />
+  <InstagramGrid />
+  <Fragment set:html={homeAfterInstagram} />
   <script>
     import '../scripts/home.ts';
   </script>
