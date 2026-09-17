@@ -5,6 +5,15 @@ import '../styles/familias.css';
 
 const title = 'Para filhos e familiares | Nova Belluno';
 const description = 'Uma conversa mais leve sobre o cuidado de quem você ama: segurança, convivência, autonomia e presença para toda a família.';
+
+/* O vídeo é hospedado no Mux. O identificador de reprodução é público por
+   natureza — é ele que o player usa no navegador — e também gera a miniatura
+   consumida pelos dados estruturados. */
+const videoPlaybackId = 'rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA';
+const videoTitle = 'Quando levar um idoso para uma ILPI';
+const videoDescription = 'O Dr. Álvaro explica em que situações o cuidado em casa deixa de ser suficiente e como uma Instituição de Longa Permanência para Idosos funciona como retaguarda da família.';
+const videoEmbedUrl = `https://player.mux.com/${videoPlaybackId}?metadata-video-title=${encodeURIComponent(videoTitle)}&video-title=${encodeURIComponent(videoTitle)}`;
+const videoThumbnailUrl = `https://image.mux.com/${videoPlaybackId}/thumbnail.jpg`;
 const faqItems = [
   {
     question: 'Escolher um residencial significa deixar meu familiar de lado?',
@@ -48,6 +57,17 @@ const jsonLd = {
         { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://novabelluno.com.br/' },
         { '@type': 'ListItem', position: 2, name: 'Para famílias', item: 'https://novabelluno.com.br/familias/' },
       ],
+    },
+    {
+      '@type': 'VideoObject',
+      '@id': 'https://novabelluno.com.br/familias/#video',
+      name: videoTitle,
+      description: videoDescription,
+      thumbnailUrl: videoThumbnailUrl,
+      embedUrl: videoEmbedUrl,
+      inLanguage: 'pt-BR',
+      isPartOf: { '@id': 'https://novabelluno.com.br/familias/#webpage' },
+      publisher: { '@id': 'https://novabelluno.com.br/#organization' },
     },
     {
       '@type': 'FAQPage',
@@ -126,6 +146,56 @@ const jsonLd = {
           <p class="familias-page__lead">Quando o cuidado é organizado por uma equipe, a família ganha clareza para participar com mais leveza e qualidade de presença.</p>
           <p>A Nova Belluno combina hospedagem, convivência e acompanhamento de diferentes profissionais em uma rotina pensada para cada residente. O diálogo com a família faz parte desse cuidado desde a primeira conversa.</p>
         </div>
+      </div>
+    </section>
+
+    <section class="familias-page__video" aria-labelledby="familias-video-title">
+      <div class="familias-page__video-inner">
+        <div class="familias-page__video-content">
+          <p class="familias-page__video-eyebrow">Orientação médica</p>
+          <h2 id="familias-video-title">Quando o cuidado em casa deixa de ser suficiente</h2>
+          <p class="familias-page__video-lead">
+            O melhor lugar quase sempre é em casa — desde que a casa consiga
+            oferecer as condições para um envelhecimento seguro e com qualidade
+            de vida. Nem toda família consegue, e reconhecer isso não é abandono.
+          </p>
+          <p class="familias-page__video-note">
+            Uma ILPI é uma Instituição de Longa Permanência para Idosos.
+          </p>
+          <ul class="familias-page__video-points">
+            <li>Risco de queda que a casa não tem como controlar.</li>
+            <li>Alterações cognitivas importantes, com alucinações visuais ou auditivas.</li>
+            <li>Famílias pequenas, com um único filho ou sem filhos para dividir o cuidado.</li>
+          </ul>
+          <blockquote class="familias-page__video-quote">
+            <p>
+              Somos uma retaguarda, não uma prisão. A pessoa pode passar um
+              período aqui, voltar para casa e retornar quando precisar.
+            </p>
+            <cite>Dr. Álvaro</cite>
+          </blockquote>
+          <details class="familias-page__video-transcript">
+            <summary>Ler a transcrição do vídeo</summary>
+            <div>
+              <p>Leva, não leva? Então, o melhor local sempre é em casa. Porém, nem todos os pacientes, nem todos os idosos são fáceis de cuidar em casa.</p>
+              <p>Às vezes é um paciente com risco de queda elevado, às vezes é um paciente que está num quadro de alterações cognitivas muito importante, com alucinações visuais, alucinações auditivas que a família tem muita dificuldade de cuidar, ou até mesmo em famílias que têm um filho ou nenhum filho. E quem vai cuidar desse idoso?</p>
+              <p>Às vezes a gente acha que em casa sempre é o melhor lugar. É, se a gente consegue dar todas as condições desse envelhecimento saudável e com qualidade de vida para o idoso.</p>
+              <p>Evidentemente que tem que checar qual é a ILPI, porque tem algumas ILPIs boas e outras nem tão boas. A ILPI é a Instituição de Longa Permanência para Idosos.</p>
+              <p>Então, quando levar o meu pai, a minha mãe ou algum idoso para uma ILPI? Quando eu não conseguir cuidar desse idoso em casa, quando eu não tiver a estrutura física e humana necessária para dar uma qualidade de vida para o meu idoso.</p>
+              <p>E lembrando: a gente é uma retaguarda e não uma prisão. Pode passar um período, pode voltar para casa, depois volta para cá. A gente quer promover um final digno para esse idoso.</p>
+              <p>Se eu não consigo cuidar do meu pai por uma questão física, por uma questão de não ter recursos humanos suficientes para dar essa qualidade de vida, a ILPI surge como uma alternativa de cuidados para os nossos idosos.</p>
+            </div>
+          </details>
+        </div>
+        <figure class="familias-page__video-media">
+          <iframe
+            src={videoEmbedUrl}
+            title="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
+            loading="lazy"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+            allowfullscreen
+          ></iframe>
+        </figure>
       </div>
     </section>
 

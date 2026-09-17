@@ -12,6 +12,7 @@
 
 .familias-page__hero-inner,
 .familias-page__reframe-inner,
+.familias-page__video-inner,
 .familias-page__columns-inner,
 .familias-page__steps-inner,
 .familias-page__testimonial-inner {
@@ -69,6 +70,7 @@
 }
 
 .familias-page__reframe,
+.familias-page__video,
 .familias-page__columns,
 .familias-page__steps,
 .familias-page__testimonial {
@@ -244,6 +246,162 @@
   line-height: 1.6;
 }
 
+/* ---------- Orientação médica em vídeo ---------- */
+/* Fundo escuro para separar a fala do especialista do conteúdo institucional
+   e para que o player vertical não fique flutuando sobre um fundo claro. */
+.familias-page__video {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.familias-page__video-inner {
+  display: grid;
+  gap: clamp(36px, 5vw, 72px);
+  align-items: center;
+}
+
+.familias-page__video-content {
+  min-width: 0;
+}
+
+.familias-page__video-eyebrow {
+  margin-bottom: 14px;
+  color: color-mix(in srgb, var(--color-white) 68%, transparent);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.familias-page__video h2 {
+  max-width: 18ch;
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.06;
+  letter-spacing: -.03em;
+}
+
+.familias-page__video-lead {
+  max-width: 52ch;
+  margin-top: 22px;
+  color: color-mix(in srgb, var(--color-white) 92%, transparent);
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  line-height: 1.65;
+}
+
+.familias-page__video-note {
+  max-width: 52ch;
+  margin-top: 12px;
+  color: color-mix(in srgb, var(--color-white) 62%, transparent);
+  font-size: .85rem;
+  line-height: 1.6;
+}
+
+.familias-page__video-points {
+  margin-top: 28px;
+  display: grid;
+  gap: 12px;
+  list-style: none;
+}
+
+.familias-page__video-points li {
+  position: relative;
+  padding-left: 26px;
+  color: color-mix(in srgb, var(--color-white) 86%, transparent);
+  font-size: .95rem;
+  line-height: 1.6;
+}
+
+.familias-page__video-points li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-primary-light);
+}
+
+.familias-page__video-quote {
+  margin-top: 32px;
+  padding-left: clamp(18px, 2vw, 26px);
+  border-left: 3px solid var(--color-primary-light);
+}
+
+.familias-page__video-quote p {
+  color: var(--color-white);
+  font-family: var(--font-heading);
+  font-size: clamp(1.15rem, 1.9vw, 1.5rem);
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -.01em;
+}
+
+.familias-page__video-quote cite {
+  margin-top: 12px;
+  display: block;
+  color: color-mix(in srgb, var(--color-white) 66%, transparent);
+  font-size: .78rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+/* A transcrição fica recolhida para não competir com o vídeo, mas permanece
+   no HTML: serve a quem não pode ou não quer assistir e mantém o conteúdo
+   legível sem depender do player. */
+.familias-page__video-transcript {
+  margin-top: 32px;
+  border-top: 1px solid color-mix(in srgb, var(--color-white) 22%, transparent);
+}
+
+.familias-page__video-transcript summary {
+  padding: 18px 0;
+  color: color-mix(in srgb, var(--color-white) 82%, transparent);
+  cursor: pointer;
+  font-size: .85rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+}
+
+.familias-page__video-transcript summary:hover {
+  color: var(--color-white);
+}
+
+.familias-page__video-transcript > div {
+  padding-bottom: 20px;
+  max-width: 62ch;
+  color: color-mix(in srgb, var(--color-white) 76%, transparent);
+  font-size: .9rem;
+  line-height: 1.75;
+}
+
+.familias-page__video-transcript p + p {
+  margin-top: 14px;
+}
+
+.familias-page__video-media {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--color-white) 8%, transparent);
+  box-shadow: var(--shadow-soft);
+}
+
+/* O vídeo é vertical: a proporção vem do arquivo original e evita que o
+   player salte de altura enquanto carrega. */
+.familias-page__video-media iframe {
+  width: 100%;
+  display: block;
+  aspect-ratio: 30 / 53;
+  border: none;
+}
+
 .familias-page__testimonial {
   background: var(--color-primary);
   color: var(--color-white);
@@ -294,6 +452,7 @@
 @media (min-width: 760px) {
   .familias-page__hero,
   .familias-page__reframe,
+  .familias-page__video,
   .familias-page__columns,
   .familias-page__steps,
   .familias-page__testimonial {
@@ -324,6 +483,19 @@
     align-items: start;
   }
 
+  /* O texto recebe mais espaço que o player: um vídeo 30/53 com largura total
+     da coluna passaria de 700px de altura e dominaria a seção. */
+  .familias-page__video-inner {
+    grid-template-columns: minmax(0, 1.3fr) minmax(260px, .7fr);
+    align-items: center;
+  }
+
+  .familias-page__video-media {
+    width: 100%;
+    max-width: 380px;
+    justify-self: end;
+  }
+
   .familias-page__benefit-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -332,6 +504,7 @@
 @media (max-width: 479px) {
   .familias-page__hero,
   .familias-page__reframe,
+  .familias-page__video,
   .familias-page__columns,
   .familias-page__steps,
   .familias-page__testimonial {
