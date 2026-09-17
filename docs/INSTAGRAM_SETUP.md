@@ -54,26 +54,54 @@ Sem `INSTAGRAM_ACCESS_TOKEN`, `sync:instagram` encerra sem erro e o build usa o
 conjunto editorial versionado em `src/data/instagram.json`. Isso mantém o site
 publicável em qualquer máquina e no CI sem segredos.
 
-## Renovação do token
+## Token: duas rotas possíveis
 
-O token de longa duração vale **60 dias** e só pode ser renovado após 24 horas
-de vida. `npm run instagram:refresh` devolve um token novo, que precisa ser
-colado no `.env` e nas variáveis do provedor.
+A rota usada é escolhida pelo prefixo do token, sem mudança de código:
 
-Esse passo ainda é manual porque variáveis de ambiente de CI não são graváveis
-pelo próprio build. A automação natural, quando fizer sentido, é guardar o
-token numa tabela privada do Supabase acessível apenas pela `service_role`:
-o script leria o valor, renovaria quando faltassem menos de dez dias e gravaria
-de volta, eliminando a manutenção manual.
+| Prefixo | Host | Validade |
+| --- | --- | --- |
+| `IGAA` | `graph.instagram.com` | 60 dias, renovável |
+| `EAA` | `graph.facebook.com` | não expira |
 
-**Enquanto isso não existir, agende um lembrete a cada 45 dias.** Um token
-expirado faz o build falhar com mensagem explícita — o site publicado continua
-no ar com o grid anterior, mas deixa de atualizar.
+Trocar de uma para a outra é substituir o valor de `INSTAGRAM_ACCESS_TOKEN`.
+
+### Token de usuário do sistema (recomendado)
+
+Não expira, o que elimina a manutenção periódica. Exige um portfólio
+empresarial com a Página do Facebook vinculada à conta do Instagram.
+
+1. Em [business.facebook.com](https://business.facebook.com/) abra
+   **Configurações do negócio > Usuários > Usuários do sistema**.
+2. **Adicionar**, nome livre, função **Administrador**.
+3. **Adicionar ativos**: selecione a Página do Facebook vinculada ao
+   Instagram e conceda **Controle total**. Faça o mesmo com o app em
+   **Aplicativos**.
+4. **Gerar novo token**: escolha o app e marque `instagram_basic`,
+   `pages_show_list` e `pages_read_engagement`. Não marque o resto.
+5. Copie o token, que começa com `EAA`.
+
+Rode `npm run sync:instagram` uma vez: o script descobre a conta pela Página e
+imprime o ID para você fixar em `INSTAGRAM_BUSINESS_ACCOUNT_ID`, evitando uma
+consulta extra a cada build.
+
+O token morre se o usuário do sistema perder acesso à Página ou ao app, ou se
+alguém o revogar no Meta Business.
+
+### Token de usuário do Instagram
+
+Vale 60 dias e só pode ser renovado depois de 24 horas de vida.
+`npm run instagram:refresh` devolve um token novo, que precisa ser colado no
+`.env` e nas variáveis do provedor.
+
+Esse passo é manual porque variáveis de ambiente de CI não são graváveis pelo
+próprio build. **Enquanto for essa a rota, agende um lembrete a cada 45 dias.**
+Um token expirado faz o build falhar com mensagem explícita — o site publicado
+continua no ar com o grid anterior, mas deixa de atualizar.
 
 ## Publicação na Vercel
 
-Cadastre as três variáveis em **Settings > Environment Variables**, nos
-ambientes Production e Preview. Sem elas o build conclui normalmente, mas usa
+Cadastre as variáveis em **Settings > Environment Variables**, nos ambientes
+Production e Preview. Sem elas o build conclui normalmente, mas usa
 o conjunto versionado em vez das publicações reais.
 
 ## Atualização automática

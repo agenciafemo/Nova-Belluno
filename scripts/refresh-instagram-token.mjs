@@ -19,6 +19,16 @@ if (!token) {
   process.exit(1);
 }
 
+/* Um token de usuário do sistema não expira e não tem endpoint de renovação.
+   Chamar refresh_access_token com ele devolveria um erro confuso. */
+if (!token.startsWith('IGAA')) {
+  console.log(
+    '[instagram:refresh] O token configurado é de usuário do sistema e não expira. ' +
+    'Nada a renovar.',
+  );
+  process.exit(0);
+}
+
 const url = new URL('https://graph.instagram.com/refresh_access_token');
 url.searchParams.set('grant_type', 'ig_refresh_token');
 url.searchParams.set('access_token', token);
