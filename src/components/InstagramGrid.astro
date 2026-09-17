@@ -1,0 +1,93 @@
+---
+import { Image } from 'astro:assets';
+import instagram from '../data/instagram.json';
+
+/* As imagens vêm de scripts/sync-instagram.mjs com nomes definidos em tempo
+   de build, então não há import estático possível. O glob resolve cada arquivo
+   para o pipeline de imagens do Astro, que gera as variantes WebP do srcset. */
+const images = import.meta.glob<ImageMetadata>(
+  '../assets/instagram/*.{jpg,png,webp}',
+  { eager: true, import: 'default' },
+);
+
+const resolveImage = (fileName: string) => images[`../assets/instagram/${fileName}`];
+
+const { profile } = instagram;
+const profileUrl = `https://www.instagram.com/${profile.username}/`;
+const avatar = resolveImage(profile.avatar);
+
+/* Uma publicação sem imagem no disco significa sincronização interrompida.
+   Descartar o item é melhor que quebrar o build ou renderizar um vazio. */
+const posts = instagram.posts.filter((post) => resolveImage(post.image));
+---
+
+<section class="instagram-widget" aria-labelledby="instagram-title">
+  <div class="instagram-widget__inner">
+    <header class="instagram-widget__intro-block">
+      <p class="instagram-widget__eyebrow">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r=".75" fill="currentColor" stroke="none"/>
+        </svg>
+        Instagram
+      </p>
+      <h2 id="instagram-title">Acompanhe nosso dia a dia</h2>
+      <p class="instagram-widget__intro">
+        Momentos reais de cuidado, convivência e contato com a natureza.
+      </p>
+    </header>
+
+    <div class="ig-card">
+      <header class="ig-card__header">
+        <a class="ig-card__identity" href={profileUrl} target="_blank" rel="noopener">
+          <span class="ig-card__avatar">
+            {avatar && (
+              <Image src={avatar} width={160} height={160} format="webp"
+                     loading="lazy" decoding="async"
+                     alt={`Foto de perfil da Nova Belluno no Instagram`} />
+            )}
+          </span>
+          <span class="ig-card__identity-text">
+            <strong class="ig-card__handle">@{profile.username}</strong>
+            <span class="ig-card__name">{profile.name}</span>
+          </span>
+        </a>
+
+        <p class="ig-card__official">Perfil oficial</p>
+
+        <a class="ig-card__follow action-button action-button--whatsapp"
+           href={profileUrl} target="_blank" rel="noopener"
+           aria-label="Seguir a Nova Belluno no Instagram (abre em nova aba)">
+          <span class="action-button__label">Seguir</span>
+          <span class="action-button__hover" aria-hidden="true">
+            <span>Seguir</span>
+            <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+          <span class="action-button__fill" aria-hidden="true"></span>
+        </a>
+      </header>
+
+      <ul class="ig-card__grid">
+        {posts.map((post) => (
+          <li>
+            <a class="ig-post" href={post.permalink} target="_blank" rel="noopener">
+              <Image src={resolveImage(post.image)!} widths={[400, 640, 960]}
+                     sizes="(min-width: 760px) 33vw, 50vw" format="webp"
+                     loading="lazy" decoding="async" alt={post.alt} />
+              {post.mediaType === 'VIDEO' && (
+                <span class="ig-post__type" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </span>
+              )}
+              <span class="ig-post__veil" aria-hidden="true"></span>
+              <span class="ig-post__sr">Ver publicação no Instagram</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
