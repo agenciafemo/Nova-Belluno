@@ -1,0 +1,37 @@
+name: Rebuild agendado
+
+# O site é estático: uma publicação nova no Instagram só aparece depois de um
+# novo build. A Vercel não agenda builds de projetos estáticos por conta
+# própria, então o agendamento vive aqui e apenas aciona o deploy hook.
+#
+# Requer o segredo VERCEL_DEPLOY_HOOK_URL no repositório.
+
+on:
+  schedule:
+    # 09:00 UTC = 06:00 em Brasília, antes do horário comercial.
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Acionar o deploy hook da Vercel
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.VERCEL_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$DEPLOY_HOOK_URL" ]; then
+            echo "::error::Configure o segredo VERCEL_DEPLOY_HOOK_URL no repositório."
+            exit 1
+          fi
+
+          status=$(curl --silent --show-error --fail-with-body \
+            --output response.txt --write-out '%{http_code}' \
+            --request POST "$DEPLOY_HOOK_URL")
+
+          echo "Resposta da Vercel (HTTP $status):"
+          cat response.txt

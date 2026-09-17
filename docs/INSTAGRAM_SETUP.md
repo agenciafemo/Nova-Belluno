@@ -70,11 +70,30 @@ de volta, eliminando a manutenção manual.
 expirado faz o build falhar com mensagem explícita — o site publicado continua
 no ar com o grid anterior, mas deixa de atualizar.
 
+## Publicação na Vercel
+
+Cadastre as três variáveis em **Settings > Environment Variables**, nos
+ambientes Production e Preview. Sem elas o build conclui normalmente, mas usa
+o conjunto versionado em vez das publicações reais.
+
 ## Atualização automática
 
-O site é estático: uma publicação nova só aparece depois de um rebuild. Configure
-no provedor de hospedagem um build agendado (diário costuma ser suficiente para
-um perfil institucional) além do deploy hook que o CMS do blog já utiliza.
+O site é estático: uma publicação nova só aparece depois de um rebuild. A
+Vercel não agenda builds de projetos estáticos por conta própria, então o
+agendamento fica em `.github/workflows/rebuild-agendado.yml`, que aciona um
+deploy hook todos os dias às 6h de Brasília.
+
+Para ativar:
+
+1. Na Vercel, **Settings > Git > Deploy Hooks**: crie um hook apontando para o
+   branch de produção e copie a URL.
+2. No GitHub, **Settings > Secrets and variables > Actions**: crie o segredo
+   `VERCEL_DEPLOY_HOOK_URL` com essa URL.
+3. Rode o workflow manualmente uma vez (**Actions > Rebuild agendado > Run
+   workflow**) para confirmar que o deploy dispara.
+
+A URL do deploy hook dispara um build para quem a possuir, então ela é tratada
+como segredo e nunca entra no repositório.
 
 ## Texto alternativo
 
