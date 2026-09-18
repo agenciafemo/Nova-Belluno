@@ -188,14 +188,17 @@ const jsonLd = {
           </details>
         </div>
         <figure class="familias-page__video-media">
-          <mux-player
-            playback-id={videoPlaybackId}
-            stream-type="on-demand"
-            playbackrates="1 1.5 2"
-            title="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
-            metadata-video-title={videoTitle}
-            style={`background-image: url('${videoThumbnailUrl}?width=420&fit_mode=preserve');`}
-          ></mux-player>
+          <div class="video-frame">
+            <mux-player
+              playback-id={videoPlaybackId}
+              stream-type="on-demand"
+              playbackrates="1 1.5 2"
+              aria-label="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
+              metadata-video-title={videoTitle}
+              style={`background-image: url('${videoThumbnailUrl}?width=420&fit_mode=preserve');`}
+            ></mux-player>
+            <button class="video-speed" type="button" data-video-speed>1x</button>
+          </div>
         </figure>
       </div>
     </section>

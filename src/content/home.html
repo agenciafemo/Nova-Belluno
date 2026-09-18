@@ -600,14 +600,17 @@
            atualize também src/pages/familias.astro. -->
       <div class="testimonials__video-block">
         <figure class="testimonials__video">
-          <mux-player
-            playback-id="rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA"
-            stream-type="on-demand"
-            playbackrates="1 1.5 2"
-            title="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
-            metadata-video-title="Quando levar um idoso para uma ILPI"
-            style="background-image: url('https://image.mux.com/rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA/thumbnail.jpg?width=420&amp;fit_mode=preserve');"
-          ></mux-player>
+          <div class="video-frame">
+            <mux-player
+              playback-id="rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA"
+              stream-type="on-demand"
+              playbackrates="1 1.5 2"
+              aria-label="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
+              metadata-video-title="Quando levar um idoso para uma ILPI"
+              style="background-image: url('https://image.mux.com/rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA/thumbnail.jpg?width=420&amp;fit_mode=preserve');"
+            ></mux-player>
+            <button class="video-speed" type="button" data-video-speed>1x</button>
+          </div>
         </figure>
 
         <div class="testimonials__video-copy">
