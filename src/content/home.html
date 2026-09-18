@@ -598,19 +598,34 @@
       <!-- Mesmo vídeo apresentado em /familias/, onde ele tem a transcrição
            completa e os dados estruturados. Se o identificador do Mux mudar,
            atualize também src/pages/familias.astro. -->
-      <figure class="testimonials__video">
-        <iframe
-          src="https://player.mux.com/rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA?metadata-video-title=Quando%20levar%20um%20idoso%20para%20uma%20ILPI&amp;video-title=Quando%20levar%20um%20idoso%20para%20uma%20ILPI"
-          title="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
-          loading="lazy"
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-          allowfullscreen
-        ></iframe>
-        <figcaption class="testimonials__video-caption">
-          Dr. Álvaro explica quando o cuidado em casa deixa de ser suficiente.
-          <a href="/familias/#familias-video-title">Ver a explicação completa</a>
-        </figcaption>
-      </figure>
+      <div class="testimonials__video-block">
+        <figure class="testimonials__video">
+          <iframe
+            src="https://player.mux.com/rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA?metadata-video-title=Quando%20levar%20um%20idoso%20para%20uma%20ILPI&amp;video-title=Quando%20levar%20um%20idoso%20para%20uma%20ILPI"
+            title="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
+            loading="lazy"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+            allowfullscreen
+          ></iframe>
+        </figure>
+
+        <div class="testimonials__video-copy">
+          <p class="testimonials__video-eyebrow">Orientação médica</p>
+          <h3 class="testimonials__video-title">Quando o cuidado em casa deixa de ser suficiente</h3>
+          <p class="testimonials__video-lead">
+            O melhor lugar quase sempre é em casa, desde que a casa ofereça
+            condições para um envelhecimento seguro. Reconhecer que nem sempre
+            é possível não é abandono.
+          </p>
+          <blockquote class="testimonials__video-quote">
+            <p>Somos uma retaguarda, não uma prisão.</p>
+            <cite>Dr. Álvaro</cite>
+          </blockquote>
+          <a class="testimonials__video-link" href="/familias/#familias-video-title">
+            Ver a explicação completa <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
 
       <div class="visits-note">
         <span class="visits-note__icon" aria-hidden="true">

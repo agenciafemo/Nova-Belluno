@@ -85,43 +85,111 @@
 }
 
 /* ---------- Vídeo da orientação médica ---------- */
-/* O mesmo vídeo de /familias/, aqui sem transcrição: a página de famílias
-   continua sendo o lugar do conteúdo completo e dos dados estruturados. */
-.testimonials__video {
-  margin: 0;
+/* O mesmo vídeo de /familias/, aqui com um resumo ao lado. A transcrição e os
+   dados estruturados continuam só naquela página, que é o destino do link. */
+.testimonials__video-block {
   display: grid;
-  gap: 14px;
-  justify-items: center;
-  text-align: center;
+  gap: clamp(24px, 3.5vw, 44px);
+  align-items: center;
+  padding: clamp(24px, 3.5vw, 40px);
+  border: 1px solid color-mix(in srgb, var(--color-primary) 14%, transparent);
+  border-radius: var(--radius-lg);
 }
 
-/* O vídeo é vertical. A proporção declarada evita que o bloco salte de
-   altura enquanto o player carrega, e o limite de largura impede que uma
-   peça 30/53 domine a seção inteira no desktop. */
-.testimonials__video iframe {
+.testimonials__video {
+  margin: 0;
+  justify-self: center;
   width: 100%;
   max-width: 330px;
+}
+
+/* O vídeo é vertical. A proporção declarada evita que o bloco salte de altura
+   enquanto o player carrega, e o teto de largura impede que uma peça 30/53
+   ocupe mais de dois mil pixels de altura na largura da seção. */
+.testimonials__video iframe {
+  width: 100%;
   display: block;
   aspect-ratio: 30 / 53;
   overflow: hidden;
   border: none;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   background: var(--color-beige-soft);
   box-shadow: var(--shadow-soft);
 }
 
-.testimonials__video-caption {
-  color: var(--color-ink-soft);
-  font-size: .82rem;
-  line-height: 1.6;
+.testimonials__video-copy {
+  min-width: 0;
 }
 
-.testimonials__video-caption a {
-  display: inline-block;
+.testimonials__video-eyebrow {
+  margin-bottom: 12px;
+  color: var(--color-primary-light);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.testimonials__video-title {
+  max-width: 20ch;
   color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -.02em;
+}
+
+.testimonials__video-lead {
+  max-width: 46ch;
+  margin-top: 16px;
+  color: var(--color-ink-soft);
+  font-size: clamp(.9rem, 1.05vw, .98rem);
+  line-height: 1.7;
+}
+
+.testimonials__video-quote {
+  margin-top: 24px;
+  padding-left: 18px;
+  border-left: 3px solid var(--color-primary-light);
+}
+
+.testimonials__video-quote p {
+  color: var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.testimonials__video-quote cite {
+  margin-top: 8px;
+  display: block;
+  color: var(--color-ink-soft);
+  font-size: .74rem;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.testimonials__video-link {
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 24px;
+  color: var(--color-primary);
+  font-size: .82rem;
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 4px;
+}
+
+.testimonials__video-link span {
+  transition: transform .25s ease;
+}
+
+.testimonials__video-link:hover span {
+  transform: translateX(3px);
 }
 
 .testimonials__reviews {
@@ -223,9 +291,14 @@
 
   /* Título e reportagem dividem a primeira linha. Vídeo e card de visitas
      entram embaixo, cada um ocupando a largura inteira da seção. */
-  .testimonials__video,
+  .testimonials__video-block,
   .testimonials__reviews {
     grid-column: 1 / -1;
+  }
+
+  /* Dentro do bloco, vídeo à esquerda e resumo à direita. */
+  .testimonials__video-block {
+    grid-template-columns: minmax(0, 330px) minmax(0, 1fr);
   }
 }
 
