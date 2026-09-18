@@ -1,6 +1,6 @@
 import type { User } from '@supabase/supabase-js';
 import { isSupabaseConfigured, supabase } from '../lib/supabase-browser';
-import { getEditorialFeedback } from '../lib/editorial.mjs';
+import { getEditorialFeedback, getSeoChecklist } from '../lib/editorial.mjs';
 
 type PostStatus = 'draft' | 'published' | 'archived';
 type AdminRole = 'editor' | 'admin';
@@ -161,6 +161,7 @@ function readEditorialInput() {
     author: byId<HTMLInputElement>('post-author').value.trim(),
     coverImage: coverFileInput.files?.length ? '/pending-upload.webp' : coverImageInput.value.trim(),
     coverAlt: byId<HTMLInputElement>('post-cover-alt').value.trim(),
+    tags: byId<HTMLInputElement>('post-tags').value.split(',').map((tag) => tag.trim()).filter(Boolean),
     seoTitle: byId<HTMLInputElement>('post-seo-title').value.trim(),
     seoDescription: byId<HTMLTextAreaElement>('post-seo-description').value.trim(),
     canonicalUrl: byId<HTMLInputElement>('post-canonical').value.trim(),
@@ -169,17 +170,85 @@ function readEditorialInput() {
 }
 
 function updateEditorialPreview() {
-  const feedback = getEditorialFeedback(readEditorialInput());
+  const input = readEditorialInput();
+  const feedback = getEditorialFeedback(input);
   byId<HTMLElement>('seo-preview-title').textContent = feedback.title || 'Título do artigo';
   byId<HTMLElement>('seo-preview-url').textContent = `https://novabelluno.com.br/blog/${slugInput.value || 'url-do-artigo'}/`;
   byId<HTMLElement>('seo-preview-description').textContent = feedback.description || 'A descrição SEO ou o resumo aparecerá aqui.';
-  const checklist = byId<HTMLUListElement>('editorial-checklist');
-  checklist.replaceChildren();
-  for (const message of [...feedback.errors, ...feedback.warnings]) {
+  /* Só o que realmente impede salvar aparece aqui. As recomendações de SEO
+     ficam na lista abaixo, com estado próprio, para que a pessoa distinga o
+     que precisa corrigir do que pode decidir deixar como está. */
+  const blockers = byId<HTMLUListElement>('editorial-checklist');
+  blockers.replaceChildren();
+  blockers.hidden = feedback.errors.length === 0;
+  for (const message of feedback.errors) {
     const item = document.createElement('li');
     item.textContent = message;
-    checklist.append(item);
+    blockers.append(item);
   }
+
+  const seo = getSeoChecklist(input);
+  const list = byId<HTMLUListElement>('seo-checklist');
+  list.replaceChildren();
+
+  for (const entry of seo.items) {
+    const item = document.createElement('li');
+    item.dataset.status = entry.status;
+
+    const label = document.createElement('strong');
+    label.textContent = entry.label;
+
+    const detail = document.createElement('span');
+    detail.textContent = entry.detail;
+
+    item.append(label, detail);
+    list.append(item);
+  }
+
+  const percent = Math.round((seo.done / seo.total) * 100);
+  const ring = byId<HTMLElement>('seo-check-ring');
+  ring.style.setProperty('--score', String(percent));
+  ring.style.setProperty('--score-color', percent >= 80 ? '#2E7D53' : percent >= 40 ? '#D08A2C' : '#B4553F');
+  byId<HTMLElement>('seo-check-value').textContent = `${percent}%`;
+  byId<HTMLElement>('seo-check-score').textContent = `${seo.done} de ${seo.total} itens preenchidos`;
+}
+
+/* datetime-local trabalha em horário local, sem fuso; o banco guarda UTC.
+   Estas duas funções fazem a ponte sem depender de biblioteca. */
+function toLocalInputValue(iso: string | null) {
+  if (!iso) return '';
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+  const pad = (value: number) => String(value).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function isScheduled(post: BlogPostRow) {
+  return post.status === 'published'
+    && Boolean(post.published_at)
+    && new Date(post.published_at as string).getTime() > Date.now();
+}
+
+/* O campo de data só faz sentido com o artigo publicado: em rascunho ele não
+   tem efeito e só somaria ruído ao formulário. */
+function updateScheduleVisibility() {
+  const published = byId<HTMLSelectElement>('post-status').value === 'published';
+  byId<HTMLElement>('admin-schedule-field').hidden = !published;
+}
+
+/* Uma data escolhida no formulário vence a existente: é assim que se reagenda
+   ou se antecipa um artigo. Sem data, mantém a que já havia e, na primeira
+   publicação, assume agora. */
+function readPublishedAt(form: FormData, existing: BlogPostRow | undefined, status: PostStatus) {
+  const chosen = String(form.get('published_at') ?? '').trim();
+
+  if (chosen) {
+    const date = new Date(chosen);
+    if (Number.isNaN(date.getTime())) throw new Error('A data de publicação informada não é válida.');
+    return date.toISOString();
+  }
+
+  return existing?.published_at ?? (status === 'published' ? new Date().toISOString() : null);
 }
 
 function resetEditor() {
@@ -191,6 +260,8 @@ function resetEditor() {
   slugWasEdited = false;
   slugInput.readOnly = false;
   coverImageInput.required = true;
+  byId<HTMLInputElement>('post-published-at').value = '';
+  updateScheduleVisibility();
   updateCounters();
   titleInput.focus();
 }
@@ -199,7 +270,7 @@ function fillEditor(post: BlogPostRow) {
   byId<HTMLInputElement>('post-id').value = post.id;
   titleInput.value = post.title;
   slugInput.value = post.slug;
-  slugInput.readOnly = Boolean(post.published_at);
+  slugInput.readOnly = Boolean(post.published_at) && !isScheduled(post);
   coverFileInput.value = '';
   coverImageInput.required = true;
   byId<HTMLTextAreaElement>('post-description').value = post.description;
@@ -213,9 +284,13 @@ function fillEditor(post: BlogPostRow) {
   byId<HTMLTextAreaElement>('post-seo-description').value = post.seo_description ?? '';
   byId<HTMLInputElement>('post-canonical').value = post.canonical_url ?? '';
   byId<HTMLSelectElement>('post-status').value = post.status;
+  byId<HTMLInputElement>('post-published-at').value = toLocalInputValue(post.published_at);
+  updateScheduleVisibility();
   byId<HTMLInputElement>('post-featured').checked = post.featured;
   editorTitle.textContent = 'Editar artigo';
-  editorState.textContent = post.status === 'published' ? 'Publicado' : post.status === 'archived' ? 'Arquivado' : 'Rascunho';
+  editorState.textContent = isScheduled(post)
+    ? 'Agendado'
+    : post.status === 'published' ? 'Publicado' : post.status === 'archived' ? 'Arquivado' : 'Rascunho';
   slugWasEdited = true;
   updateCounters();
   editorForm.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
@@ -240,7 +315,10 @@ function renderPosts() {
     const title = document.createElement('strong');
     title.textContent = post.title;
     const meta = document.createElement('small');
-    meta.textContent = `${post.category} · ${post.status}`;
+    const estado = isScheduled(post)
+      ? `agendado para ${new Date(post.published_at as string).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}`
+      : post.status;
+    meta.textContent = `${post.category} · ${estado}`;
     copy.append(title, meta);
 
     const edit = document.createElement('button');
@@ -426,7 +504,7 @@ editorForm.addEventListener('submit', async (event) => {
     if (feedback.errors.length) throw new Error(feedback.errors.join(' '));
     const slug = String(form.get('slug') ?? '').trim();
     const existing = posts.find((post) => post.id === String(form.get('id')));
-    if (existing?.published_at && existing.slug !== slug) {
+    if (existing?.published_at && !isScheduled(existing) && existing.slug !== slug) {
       throw new Error('A URL de um artigo já publicado não pode ser alterada pelo painel. Solicite um redirecionamento à equipe técnica.');
     }
     const selectedFile = coverFileInput.files?.[0];
@@ -448,7 +526,7 @@ editorForm.addEventListener('submit', async (event) => {
       seo_title: String(form.get('seo_title') ?? '').trim() || null,
       seo_description: String(form.get('seo_description') ?? '').trim() || null,
       canonical_url: String(form.get('canonical_url') ?? '').trim() || null,
-      published_at: existing?.published_at ?? (statusValue === 'published' ? new Date().toISOString() : null),
+      published_at: readPublishedAt(form, existing, statusValue),
       updated_at: new Date().toISOString(),
     };
 
@@ -490,6 +568,13 @@ bodyInput.addEventListener('keydown', (event) => {
   applyMarkdownAction(action);
 });
 editorForm.addEventListener('input', updateCounters);
+
+/* O select não emite "input" em todos os navegadores; "change" é o evento que
+   ele dispara de forma consistente ao trocar de opção. */
+byId<HTMLSelectElement>('post-status').addEventListener('change', () => {
+  updateScheduleVisibility();
+  updateEditorialPreview();
+});
 coverFileInput.addEventListener('change', () => {
   coverImageInput.required = !coverFileInput.files?.length;
   updateCounters();
