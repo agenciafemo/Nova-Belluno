@@ -6,9 +6,18 @@ import '../../styles/blog.css';
 
 const posts = await getPublishedPosts();
 const featuredPost = posts.find((post) => post.data.featured) ?? posts[0];
-const remainingPosts = posts.filter((post) => post.id !== featuredPost?.id);
-const pageSize = 6;
-const visiblePosts = remainingPosts.slice(0, pageSize);
+
+/* A grade recebe todos os artigos, inclusive o destacado, para que a busca e o
+   filtro percorram uma lista só. O destacado entra oculto e só aparece na
+   grade quando há filtragem ativa, evitando aparecer duas vezes. */
+const categories = [...new Set(posts.map((post) => post.data.category))].sort(
+  (first, second) => first.localeCompare(second, 'pt-BR'),
+);
+
+/* Índice de busca montado no build: título, resumo, categoria e tags em um
+   único atributo, para o script comparar sem percorrer o DOM de cada cartão. */
+const searchIndex = (post: (typeof posts)[number]) =>
+  [post.data.title, post.data.description, post.data.category, ...post.data.tags].join(' ');
 const title = 'Blog sobre cuidado e envelhecimento | Nova Belluno';
 const description = 'Informação para famílias e cuidadores sobre envelhecimento, bem-estar, convivência e decisões relacionadas ao cuidado da pessoa idosa.';
 const jsonLd = {
@@ -62,38 +71,67 @@ const jsonLd = {
           <span aria-current="page">Blog</span>
         </nav>
         <p class="internal-hero__eyebrow">Conteúdos Nova Belluno</p>
-        <h1 id="blog-title">Informação para cuidar com mais segurança e tranquilidade</h1>
+        <h1 id="blog-title">Informação para cuidar com mais tranquilidade</h1>
         <p>
-          Conteúdos para famílias e cuidadores sobre envelhecimento, bem-estar,
-          convivência e decisões relacionadas ao cuidado da pessoa idosa.
+          Artigos para famílias e cuidadores sobre envelhecimento, bem-estar e
+          decisões do dia a dia.
         </p>
       </div>
     </section>
 
-    <section class="blog-page__content" aria-labelledby="latest-posts-title" data-page-size={pageSize}>
+    <section class="blog-page__content" aria-label="Artigos do blog" data-blog-index>
       <div class="blog-page__content-inner">
-        {featuredPost ? (
-          <div class="blog-page__featured">
-            <p class="blog-page__section-label">Leitura em destaque</p>
-            <BlogCard post={featuredPost} featured />
-          </div>
+        {posts.length > 0 ? (
+          <>
+            <form class="blog-toolbar" data-blog-toolbar hidden role="search" onsubmit="return false">
+              <div class="blog-toolbar__search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                     stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/>
+                </svg>
+                <label class="blog-toolbar__label" for="blog-search">Buscar artigos</label>
+                <input id="blog-search" type="search" data-blog-search
+                       placeholder="Buscar artigos" autocomplete="off">
+              </div>
+              <div class="blog-toolbar__categories" role="group" aria-label="Filtrar por categoria">
+                <button type="button" class="blog-chip" data-blog-category="todos" aria-pressed="true">Todos</button>
+                {categories.map((category) => (
+                  <button type="button" class="blog-chip" data-blog-category={category} aria-pressed="false">{category}</button>
+                ))}
+              </div>
+            </form>
+
+            <p class="blog-toolbar__status" data-blog-status role="status" aria-live="polite"></p>
+
+            {featuredPost && (
+              <div class="blog-page__featured">
+                <p class="blog-page__section-label">Leitura em destaque</p>
+                <BlogCard post={featuredPost} featured />
+              </div>
+            )}
+
+            <div class="blog-page__grid">
+              {posts.map((post) => (
+                <div class="blog-page__grid-item" data-blog-item
+                     data-category={post.data.category}
+                     data-search={searchIndex(post)}
+                     data-featured={post.id === featuredPost?.id ? 'true' : undefined}
+                     hidden={post.id === featuredPost?.id}>
+                  <BlogCard {post} />
+                </div>
+              ))}
+            </div>
+
+            <p class="blog-page__no-results" data-blog-empty hidden>
+              Nenhum artigo corresponde à busca. Tente outra palavra ou volte para
+              <button type="button" class="blog-page__no-results-reset" data-blog-reset>todas as categorias</button>.
+            </p>
+          </>
         ) : (
           <div class="blog-page__empty">
             <p class="blog-page__section-label">Conteúdos Nova Belluno</p>
             <h2>Estamos preparando novas leituras</h2>
             <p>Em breve, este espaço reunirá conteúdos para famílias e cuidadores.</p>
-          </div>
-        )}
-
-        {visiblePosts.length > 0 && (
-          <div class="blog-page__latest">
-            <header>
-              <p class="blog-page__section-label">Publicações recentes</p>
-              <h2 id="latest-posts-title">Mais conteúdos para sua família</h2>
-            </header>
-            <div class="blog-page__grid">
-              {visiblePosts.map((post) => <BlogCard {post} />)}
-            </div>
           </div>
         )}
 
@@ -123,12 +161,6 @@ const jsonLd = {
           </div>
         </aside>
 
-        {remainingPosts.length > pageSize && (
-          <nav class="blog-page__pagination" aria-label="Paginação do blog">
-            <span aria-current="page">1</span>
-            <span aria-label="Mais páginas serão disponibilizadas com novos artigos">Próximas páginas</span>
-          </nav>
-        )}
       </div>
     </section>
 
@@ -161,5 +193,6 @@ const jsonLd = {
 
   <script>
     import '../../scripts/internal.ts';
+    import '../../scripts/blog-filter.ts';
   </script>
 </BaseLayout>

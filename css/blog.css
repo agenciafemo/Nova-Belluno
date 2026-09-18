@@ -6,6 +6,14 @@
   background: var(--color-beige-soft);
 }
 
+/* O índice do blog usa um cabeçalho mais baixo que o das páginas de artigo.
+   Aqui o conteúdo principal é a lista, e um hero alto empurrava os artigos
+   para fora da primeira tela. */
+.blog-page__hero {
+  padding-top: calc(var(--header-bar) + clamp(34px, 4vw, 54px));
+  padding-bottom: clamp(34px, 4vw, 52px);
+}
+
 .blog-page__hero-inner,
 .blog-article__hero-inner,
 .blog-page__content-inner,
@@ -19,7 +27,7 @@
   max-width: 940px;
   color: var(--color-primary);
   font-family: var(--font-heading);
-  font-size: clamp(2.15rem, 4.25vw, 3.85rem);
+  font-size: clamp(1.85rem, 2.9vw, 2.7rem);
   font-weight: 500;
   line-height: 1.01;
   letter-spacing: -.04em;
@@ -44,8 +52,15 @@
   line-height: 1.75;
 }
 
+.blog-page__hero-inner > p:last-child {
+  max-width: 56ch;
+  margin-top: 14px;
+  font-size: .98rem;
+  line-height: 1.65;
+}
+
 .blog-page__content {
-  padding: clamp(70px, 9vw, 124px) 24px;
+  padding: clamp(36px, 4.5vw, 60px) 24px clamp(70px, 9vw, 110px);
   background: var(--color-white);
 }
 
@@ -62,8 +77,11 @@
 }
 
 .blog-page__featured {
-  padding-bottom: clamp(70px, 9vw, 116px);
-  border-bottom: 1px solid var(--color-beige);
+  padding-bottom: clamp(28px, 3.5vw, 40px);
+}
+
+.blog-page__content.is-filtering .blog-page__featured {
+  display: none;
 }
 
 .blog-page__partner-card {
@@ -248,10 +266,6 @@
   transform: translateX(4px);
 }
 
-.blog-page__latest {
-  padding-top: clamp(70px, 9vw, 116px);
-}
-
 .blog-page__latest > header h2,
 .blog-related h2,
 .blog-page__empty h2 {
@@ -265,9 +279,141 @@
 }
 
 .blog-page__grid {
-  margin-top: clamp(34px, 5vw, 54px);
   display: grid;
   gap: 24px;
+}
+
+/* O artigo em destaque também é renderizado aqui, oculto, para que busca e
+   filtro percorram uma lista só. O script revela quando há filtragem. */
+.blog-page__grid-item {
+  min-width: 0;
+  display: contents;
+}
+
+.blog-page__grid-item[hidden] {
+  display: none;
+}
+
+.blog-page__no-results {
+  padding: clamp(28px, 4vw, 44px);
+  border: 1px solid var(--color-beige);
+  border-radius: var(--radius-lg);
+  background: var(--color-beige-soft);
+  color: var(--color-ink-soft);
+  font-size: .95rem;
+  line-height: 1.7;
+}
+
+.blog-page__no-results-reset {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* ---------- Barra de busca e categorias ---------- */
+/* Fica logo abaixo do cabeçalho porque é a primeira decisão de quem chega a um
+   índice de blog: procurar um assunto ou percorrer a lista. */
+.blog-toolbar {
+  margin-bottom: clamp(24px, 3vw, 34px);
+  padding-bottom: clamp(20px, 2.5vw, 28px);
+  display: grid;
+  gap: 16px;
+  border-bottom: 1px solid var(--color-beige);
+}
+
+.blog-toolbar__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.blog-toolbar__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  border: 1px solid var(--color-beige);
+  border-radius: var(--radius-pill, 999px);
+  background: var(--color-beige-soft);
+  color: var(--color-ink-soft);
+  transition: border-color .2s ease, background-color .2s ease;
+}
+
+.blog-toolbar__search:focus-within {
+  border-color: var(--color-primary-light);
+  background: var(--color-white);
+}
+
+.blog-toolbar__search input {
+  width: 100%;
+  min-height: 46px;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: .95rem;
+}
+
+.blog-toolbar__search input::placeholder {
+  color: var(--color-ink-soft);
+}
+
+.blog-toolbar__search input:focus {
+  outline: none;
+}
+
+.blog-toolbar__categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.blog-chip {
+  min-height: 38px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-beige);
+  border-radius: var(--radius-pill, 999px);
+  background: var(--color-white);
+  color: var(--color-ink-soft);
+  font-family: var(--font-body);
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .2s ease, background-color .2s ease, color .2s ease;
+}
+
+.blog-chip:hover {
+  border-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.blog-chip[aria-pressed='true'] {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.blog-toolbar__status {
+  margin-bottom: 18px;
+  color: var(--color-ink-soft);
+  font-size: .85rem;
+}
+
+.blog-toolbar__status:empty {
+  margin: 0;
 }
 
 .blog-page__empty {
@@ -482,22 +628,27 @@
     padding-inline: 40px;
   }
 
+  /* O destaque era quase uma capa de revista: imagem de altura total e título
+     de até 3,6rem empurravam os demais artigos para fora da tela. Agora ele
+     ocupa pouco mais que um cartão comum e mantém a leitura da lista. */
   .blog-card--featured {
     display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(320px, .7fr);
+    grid-template-columns: minmax(0, .95fr) minmax(300px, 1fr);
+    align-items: center;
   }
 
   .blog-card--featured .blog-card__image {
     height: 100%;
+    max-height: 340px;
     aspect-ratio: auto;
   }
 
   .blog-card--featured .blog-card__content {
-    padding: clamp(34px, 5vw, 64px);
+    padding: clamp(28px, 3.4vw, 44px);
   }
 
   .blog-card--featured h2 {
-    font-size: clamp(2.1rem, 3.8vw, 3.6rem);
+    font-size: clamp(1.65rem, 2.4vw, 2.2rem);
   }
 
   .blog-page__partner-card {
@@ -508,6 +659,16 @@
 
   .blog-page__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .blog-toolbar {
+    grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+    align-items: center;
+    gap: 20px;
+  }
+
+  .blog-toolbar__categories {
+    justify-content: flex-end;
   }
 
   .blog-article__layout {
