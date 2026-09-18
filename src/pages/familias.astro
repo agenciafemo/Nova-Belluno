@@ -188,13 +188,14 @@ const jsonLd = {
           </details>
         </div>
         <figure class="familias-page__video-media">
-          <iframe
-            src={videoEmbedUrl}
+          <mux-player
+            playback-id={videoPlaybackId}
+            stream-type="on-demand"
+            playbackrates="1 1.5 2"
             title="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
-            loading="lazy"
-            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-            allowfullscreen
-          ></iframe>
+            metadata-video-title={videoTitle}
+            style={`background-image: url('${videoThumbnailUrl}?width=420&fit_mode=preserve');`}
+          ></mux-player>
         </figure>
       </div>
     </section>

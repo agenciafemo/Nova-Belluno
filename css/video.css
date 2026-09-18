@@ -1,0 +1,85 @@
+/* ---------- Player de vídeo com identidade Nova Belluno ----------
+   O embed em iframe do player.mux.com não aceita CSS de fora, então o site usa
+   o componente web. Isso permite substituir o rosa da Mux pelo azul da marca e
+   controlar o botão central de reprodução.
+
+   O script src/scripts/video-player.ts só importa o componente quando ele se
+   aproxima da viewport. Enquanto isso o elemento existe sem upgrade, e as
+   regras abaixo reservam a proporção para não haver salto de layout. */
+mux-player {
+  --primary-color: var(--color-white);
+  --secondary-color: color-mix(in srgb, var(--color-primary) 88%, transparent);
+  --accent-color: var(--color-primary-light);
+  --controls-backdrop-color: color-mix(in srgb, var(--color-primary) 22%, transparent);
+
+  /* O player esconde o botão de velocidade abaixo de uns 500px de largura.
+     Como o vídeo é vertical e nunca chega perto disso, a exibição é forçada:
+     é o controle que permite assistir em 1,5x ou 2x. */
+  --playback-rate-button: flex;
+
+  /* O Mux nem sempre propaga --primary-color para os ícones da barra, então
+     a variável do media-chrome é definida junto. */
+  --media-primary-color: var(--color-white);
+  --media-font-family: var(--font-body);
+  --media-control-hover-background: color-mix(in srgb, var(--color-white) 22%, transparent);
+
+  width: 100%;
+  display: block;
+  aspect-ratio: 30 / 53;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary);
+  background-position: center;
+  background-size: cover;
+  box-shadow: var(--shadow-soft);
+}
+
+/* O botão central nasce discreto e translúcido. Em vídeo pausado ele é a
+   única indicação de que há algo para assistir, então ganha o azul da marca,
+   contorno claro e tamanho suficiente para ser alvo de toque confortável. */
+mux-player::part(center play button) {
+  width: 84px;
+  height: 84px;
+  padding: 0;
+  color: var(--color-white);
+  background: color-mix(in srgb, var(--color-primary) 82%, transparent);
+  border: 2px solid color-mix(in srgb, var(--color-white) 90%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 10px 30px -8px rgba(19, 36, 120, .55);
+  transition: background-color .25s ease, transform .25s ease;
+}
+
+mux-player::part(center play button):hover,
+mux-player::part(center play button):focus-visible {
+  background: var(--color-primary);
+  transform: scale(1.06);
+}
+
+/* A barra inferior fica sobre o azul da marca em vez do cinza translúcido
+   padrão, separando o controle do vídeo sem escurecer a imagem. */
+mux-player::part(control-bar) {
+  padding-inline: 6px;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--color-primary) 92%, transparent),
+    color-mix(in srgb, var(--color-primary) 55%, transparent) 70%,
+    transparent
+  );
+}
+
+/* “bottom” restringe a regra aos botões da barra inferior. Sem esse token o
+   seletor também alcançaria a parte “center play button”, que é redonda, e o
+   raio de 8px venceria por vir depois na folha. */
+mux-player::part(bottom button) {
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  mux-player::part(center play button) {
+    transition: none;
+  }
+
+  mux-player::part(center play button):hover {
+    transform: none;
+  }
+}

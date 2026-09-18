@@ -600,13 +600,14 @@
            atualize também src/pages/familias.astro. -->
       <div class="testimonials__video-block">
         <figure class="testimonials__video">
-          <iframe
-            src="https://player.mux.com/rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA?metadata-video-title=Quando%20levar%20um%20idoso%20para%20uma%20ILPI&amp;video-title=Quando%20levar%20um%20idoso%20para%20uma%20ILPI"
+          <mux-player
+            playback-id="rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA"
+            stream-type="on-demand"
+            playbackrates="1 1.5 2"
             title="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
-            loading="lazy"
-            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-            allowfullscreen
-          ></iframe>
+            metadata-video-title="Quando levar um idoso para uma ILPI"
+            style="background-image: url('https://image.mux.com/rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA/thumbnail.jpg?width=420&amp;fit_mode=preserve');"
+          ></mux-player>
         </figure>
 
         <div class="testimonials__video-copy">
