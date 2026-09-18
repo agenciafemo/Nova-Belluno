@@ -96,25 +96,10 @@
   border-radius: var(--radius-lg);
 }
 
-.testimonials__video {
-  margin: 0;
+.testimonials__video-block .video-frame {
   justify-self: center;
   width: 100%;
   max-width: 330px;
-}
-
-/* O vídeo é vertical. A proporção declarada evita que o bloco salte de altura
-   enquanto o player carrega, e o teto de largura impede que uma peça 30/53
-   ocupe mais de dois mil pixels de altura na largura da seção. */
-.testimonials__video iframe {
-  width: 100%;
-  display: block;
-  aspect-ratio: 30 / 53;
-  overflow: hidden;
-  border: none;
-  border-radius: var(--radius-md);
-  background: var(--color-beige-soft);
-  box-shadow: var(--shadow-soft);
 }
 
 .testimonials__video-copy {

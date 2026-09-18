@@ -599,19 +599,17 @@
            completa e os dados estruturados. Se o identificador do Mux mudar,
            atualize também src/pages/familias.astro. -->
       <div class="testimonials__video-block">
-        <figure class="testimonials__video">
-          <div class="video-frame">
-            <mux-player
-              playback-id="rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA"
-              stream-type="on-demand"
-              playbackrates="1 1.5 2"
-              aria-label="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
-              metadata-video-title="Quando levar um idoso para uma ILPI"
-              style="background-image: url('https://image.mux.com/rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA/thumbnail.jpg?width=420&amp;fit_mode=preserve');"
-            ></mux-player>
-            <button class="video-speed" type="button" data-video-speed>1x</button>
-          </div>
-        </figure>
+        <div class="video-frame">
+          <mux-player
+            playback-id="rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA"
+            stream-type="on-demand"
+            playbackrates="1 1.5 2"
+            aria-label="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
+            metadata-video-title="Quando levar um idoso para uma ILPI"
+            style="background-image: url('https://image.mux.com/rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA/thumbnail.jpg?width=420&amp;fit_mode=preserve');"
+          ></mux-player>
+          <button class="video-speed" type="button" data-video-speed>1x</button>
+        </div>
 
         <div class="testimonials__video-copy">
           <p class="testimonials__video-eyebrow">Orientação médica</p>
@@ -650,7 +648,103 @@
           </p>
         </div>
       </div>
+    </div>
+  </section>
 
+  <section class="about" id="quem-somos" aria-labelledby="about-title">
+    <div class="about__inner">
+      <div class="about__content">
+        <p class="about__eyebrow">Quem somos</p>
+        <h2 class="about__title" id="about-title">
+          Uma história construída no cuidado
+        </h2>
+
+        <div class="about__copy">
+          <p class="about__lead">
+            Desde 2016, a Nova Belluno acolhe pessoas idosas com atenção às
+            suas necessidades, respeito às suas histórias e cuidado próximo
+            às famílias.
+          </p>
+          <p>
+            Em Siderópolis e Capivari de Baixo, reunimos ambientes
+            acolhedores, contato com a natureza e o trabalho integrado de
+            diferentes profissionais para proporcionar uma rotina mais
+            segura, tranquila e humana.
+          </p>
+        </div>
+
+        <ul class="about__highlights" aria-label="Diferenciais da Nova Belluno">
+          <li class="about__highlight">
+            <span class="about__highlight-number" aria-hidden="true">01</span>
+            <div>
+              <h3>Natureza e tranquilidade</h3>
+              <p>Espaços verdes que tornam a rotina mais leve e acolhedora.</p>
+            </div>
+          </li>
+          <li class="about__highlight">
+            <span class="about__highlight-number" aria-hidden="true">02</span>
+            <div>
+              <h3>Cuidado integrado</h3>
+              <p>
+                Diferentes profissionais contribuindo para o bem-estar de
+                cada residente.
+              </p>
+            </div>
+          </li>
+          <li class="about__highlight">
+            <span class="about__highlight-number" aria-hidden="true">03</span>
+            <div>
+              <h3>Presença próxima à família</h3>
+              <p>Atenção, diálogo e respeito em cada etapa do acolhimento.</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="about__actions">
+          <a class="action-button" href="/quem-somos/">
+            <span class="action-button__label">Conheça nossa história</span>
+            <span class="action-button__hover" aria-hidden="true">
+              <span>Conheça nossa história</span>
+              <svg class="action-button__arrow" width="17" height="17" viewBox="0 0 24 24"
+                   fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M13 6l6 6-6 6"/>
+              </svg>
+            </span>
+            <span class="action-button__fill" aria-hidden="true"></span>
+          </a>
+        </div>
+      </div>
+
+      <div class="about__visual" data-about-carousel>
+        <figure class="about__image about__image--primary">
+          <img id="about-carousel-main-image"
+               src="/assets/img/local/corredor-01-960.webp" width="960" height="540"
+               loading="lazy" decoding="async"
+               alt="Corredor da Nova Belluno com janelões voltados para a área verde">
+        </figure>
+        <button class="about__image about__image--secondary about__carousel-next"
+                id="about-carousel-next" type="button"
+                aria-label="Mostrar próxima imagem: atendimento profissional a um residente">
+          <img id="about-carousel-next-image"
+               src="/assets/img/local/cuidado-01-960.webp" width="960" height="540"
+               loading="lazy" decoding="async"
+               alt="Profissional da Nova Belluno durante atendimento a um residente">
+          <span class="about__carousel-arrow" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                 stroke-linejoin="round">
+              <path d="M5 12h14M13 6l6 6-6 6"/>
+            </svg>
+          </span>
+        </button>
+        <p class="about__carousel-status" aria-live="polite" aria-atomic="true"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials testimonials--reviews" aria-label="Avaliações da Nova Belluno no Google">
+    <div class="testimonials__inner">
       <div class="testimonials__reviews">
         <header class="testimonials__reviews-header">
           <div>
