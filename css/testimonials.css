@@ -84,14 +84,6 @@
   transform: translate(3px, -3px);
 }
 
-.testimonials__copy,
-.testimonials__media {
-  min-width: 0;
-  display: grid;
-  gap: 24px;
-  align-content: start;
-}
-
 /* ---------- Vídeo da orientação médica ---------- */
 /* O mesmo vídeo de /familias/, aqui sem transcrição: a página de famílias
    continua sendo o lugar do conteúdo completo e dos dados estruturados. */
@@ -99,6 +91,8 @@
   margin: 0;
   display: grid;
   gap: 14px;
+  justify-items: center;
+  text-align: center;
 }
 
 /* O vídeo é vertical. A proporção declarada evita que o bloco salte de
@@ -106,6 +100,7 @@
    peça 30/53 domine a seção inteira no desktop. */
 .testimonials__video iframe {
   width: 100%;
+  max-width: 330px;
   display: block;
   aspect-ratio: 30 / 53;
   overflow: hidden;
@@ -221,25 +216,14 @@
 
 @media (min-width: 840px) {
   .testimonials__inner {
-    grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
-    align-items: start;
-    gap: clamp(40px, 6vw, 88px);
+    grid-template-columns: minmax(0, 1fr) minmax(360px, .82fr);
+    align-items: center;
+    gap: clamp(54px, 9vw, 140px);
   }
 
-  /* O texto vem antes no HTML para que a seção comece pelo título em telas
-     estreitas e para leitores de tela. No desktop a colocação explícita põe
-     o vídeo à esquerda sem alterar essa ordem. */
-  .testimonials__media {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  .testimonials__copy {
-    grid-column: 2;
-    grid-row: 1;
-    gap: 34px;
-  }
-
+  /* Título e reportagem dividem a primeira linha. Vídeo e card de visitas
+     entram embaixo, cada um ocupando a largura inteira da seção. */
+  .testimonials__video,
   .testimonials__reviews {
     grid-column: 1 / -1;
   }
@@ -249,9 +233,10 @@
    Reforça, dentro da seção da família, que a visita não depende de escala.
    É uma objeção comum de quem interna um pai: o medo do afastamento. */
 .visits-note {
-  /* Fica abaixo do vídeo, dentro da mesma coluna. Antes ocupava a linha
-     inteira da seção; agora o contêiner é .testimonials__media, de uma
-     coluna só, e o card acompanha a largura do player. */
+  /* O contêiner vira grid de 2 colunas no desktop; sem isso o card cai
+     sozinho na coluna esquerda da linha seguinte, deixando um vazio
+     grande à direita. Ocupando a linha inteira ele fecha a seção. */
+  grid-column: 1 / -1;
   align-self: stretch;
   padding: clamp(20px, 2.6vw, 28px) clamp(20px, 3vw, 32px);
   display: flex;
