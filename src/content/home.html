@@ -582,36 +582,57 @@
 
   <section class="testimonials" aria-labelledby="home-testimonials-title">
     <div class="testimonials__inner">
-      <div class="testimonials__heading">
-        <p>Vínculos que permanecem</p>
-        <h2 id="home-testimonials-title">O cuidado pode ser compartilhado sem afastar a família</h2>
-      </div>
-      <div class="testimonials__quote">
-        <div class="testimonials__quote-copy">
-          <p class="testimonials__statement">Mais apoio para a rotina. Mais tempo para estar perto de quem você ama.</p>
-          <p class="testimonials__note">A equipe compartilha as responsabilidades do cuidado, enquanto a família continua presente nos vínculos, nas decisões e nos momentos importantes.</p>
-          <p class="testimonials__source">Relato de uma família da Nova Belluno, publicado pelo portal 4oito.</p>
-          <a class="testimonials__report-link" href="https://www.4oito.com.br/noticia/festa-junina-anima-idosos-e-familiares-no-nova-belluno-15394" target="_blank" rel="noopener">Ler a reportagem <span aria-hidden="true">↗</span></a>
+      <div class="testimonials__copy">
+        <div class="testimonials__heading">
+          <p>Vínculos que permanecem</p>
+          <h2 id="home-testimonials-title">O cuidado pode ser compartilhado sem afastar a família</h2>
+        </div>
+        <div class="testimonials__quote">
+          <div class="testimonials__quote-copy">
+            <p class="testimonials__statement">Mais apoio para a rotina. Mais tempo para estar perto de quem você ama.</p>
+            <p class="testimonials__note">A equipe compartilha as responsabilidades do cuidado, enquanto a família continua presente nos vínculos, nas decisões e nos momentos importantes.</p>
+            <p class="testimonials__source">Relato de uma família da Nova Belluno, publicado pelo portal 4oito.</p>
+            <a class="testimonials__report-link" href="https://www.4oito.com.br/noticia/festa-junina-anima-idosos-e-familiares-no-nova-belluno-15394" target="_blank" rel="noopener">Ler a reportagem <span aria-hidden="true">↗</span></a>
+          </div>
         </div>
       </div>
 
-      <div class="visits-note">
-        <span class="visits-note__icon" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
-               stroke-linejoin="round">
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M22 11h-6M19 8v6"/>
-          </svg>
-        </span>
-        <div class="visits-note__copy">
-          <h3 class="visits-note__title">Mais presença, com visitas flexíveis</h3>
-          <p>
-            A visita pode acontecer de acordo com a disponibilidade da família,
-            desde que seja avisada com antecedência. Assim, a equipe consegue
-            organizar o melhor momento para o encontro.
-          </p>
+      <div class="testimonials__media">
+        <!-- Mesmo vídeo apresentado em /familias/, onde ele tem a transcrição
+             completa e os dados estruturados. Se o identificador do Mux mudar,
+             atualize também src/pages/familias.astro. -->
+        <figure class="testimonials__video">
+          <iframe
+            src="https://player.mux.com/rpxnqm46i3JbZBvSDzueuWmAtxg02Q26FBAPuFsoEFBA?metadata-video-title=Quando%20levar%20um%20idoso%20para%20uma%20ILPI&amp;video-title=Quando%20levar%20um%20idoso%20para%20uma%20ILPI"
+            title="Vídeo com o Dr. Álvaro sobre quando levar um idoso para uma ILPI"
+            loading="lazy"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+            allowfullscreen
+          ></iframe>
+          <figcaption class="testimonials__video-caption">
+            Dr. Álvaro explica quando o cuidado em casa deixa de ser suficiente.
+            <a href="/familias/#familias-video-title">Ver a explicação completa</a>
+          </figcaption>
+        </figure>
+
+        <div class="visits-note">
+          <span class="visits-note__icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="1.7" stroke-linecap="round"
+                 stroke-linejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M22 11h-6M19 8v6"/>
+            </svg>
+          </span>
+          <div class="visits-note__copy">
+            <h3 class="visits-note__title">Mais presença, com visitas flexíveis</h3>
+            <p>
+              A visita pode acontecer de acordo com a disponibilidade da família,
+              desde que seja avisada com antecedência. Assim, a equipe consegue
+              organizar o melhor momento para o encontro.
+            </p>
+          </div>
         </div>
       </div>
     </div>
