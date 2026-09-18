@@ -286,7 +286,12 @@
   .testimonials__inner {
     grid-template-columns: minmax(0, 1fr) minmax(360px, .82fr);
     align-items: center;
-    gap: clamp(54px, 9vw, 140px);
+
+    /* Colunas e linhas precisam de espaçamentos diferentes. O respiro largo
+       entre título e reportagem, quando aplicado também às linhas, abria um
+       vão de 140px entre o bloco do vídeo e o card de visitas. */
+    column-gap: clamp(54px, 9vw, 140px);
+    row-gap: clamp(28px, 3vw, 44px);
   }
 
   /* Título e reportagem dividem a primeira linha. Vídeo e card de visitas
