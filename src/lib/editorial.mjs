@@ -40,6 +40,58 @@ export function getEditorialFeedback(input) {
   return { errors, warnings, title, description };
 }
 
+/**
+ * Estado dos campos que influenciam como o artigo aparece na busca.
+ *
+ * Nenhum item aqui impede a publicação: o site tem alternativa para todos
+ * (o título SEO cai para o título, a descrição SEO cai para o resumo). A lista
+ * existe para que deixar um campo vazio seja uma escolha e não um esquecimento,
+ * que era o que acontecia quando esses campos não apareciam em lugar nenhum.
+ *
+ * @param {{title: string, description: string, body: string, coverAlt: string, seoTitle?: string, seoDescription?: string, tags?: string[]}} input
+ */
+export function getSeoChecklist(input) {
+  const seoTitle = (input.seoTitle ?? '').trim();
+  const seoDescription = (input.seoDescription ?? '').trim();
+  const tags = (input.tags ?? []).map((tag) => tag.trim()).filter(Boolean);
+  const coverAlt = (input.coverAlt ?? '').trim();
+  const headings = (input.body.match(/^##\s+.+$/gm) ?? []).length;
+  const hasSources = /\]\(https:\/\//i.test(input.body);
+
+  /** @type {{id: string, label: string, status: 'ok' | 'attention' | 'pending', detail: string}[]} */
+  const items = [
+    seoTitle.length === 0
+      ? { id: 'seo-title', label: 'Título SEO', status: 'pending', detail: `Vazio. A busca vai exibir o título do artigo (${input.title.trim().length} caracteres).` }
+      : seoTitle.length < 40 || seoTitle.length > 65
+        ? { id: 'seo-title', label: 'Título SEO', status: 'attention', detail: `${seoTitle.length} caracteres. Entre 40 e 65 costuma aparecer inteiro na busca.` }
+        : { id: 'seo-title', label: 'Título SEO', status: 'ok', detail: `${seoTitle.length} caracteres.` },
+
+    seoDescription.length === 0
+      ? { id: 'seo-description', label: 'Descrição SEO', status: 'pending', detail: `Vazia. A busca vai exibir o resumo do artigo (${input.description.trim().length} caracteres).` }
+      : seoDescription.length < 100 || seoDescription.length > 170
+        ? { id: 'seo-description', label: 'Descrição SEO', status: 'attention', detail: `${seoDescription.length} caracteres. Entre 100 e 170 costuma aparecer inteira.` }
+        : { id: 'seo-description', label: 'Descrição SEO', status: 'ok', detail: `${seoDescription.length} caracteres.` },
+
+    tags.length === 0
+      ? { id: 'tags', label: 'Palavras-chave', status: 'pending', detail: 'Nenhuma informada. Elas organizam o blog e sugerem artigos relacionados.' }
+      : { id: 'tags', label: 'Palavras-chave', status: 'ok', detail: `${tags.length} informada${tags.length > 1 ? 's' : ''}: ${tags.join(', ')}.` },
+
+    coverAlt.length === 0
+      ? { id: 'cover-alt', label: 'Descrição da imagem', status: 'pending', detail: 'Vazia. É o que leitores de tela anunciam e o que descreve a capa para os buscadores.' }
+      : { id: 'cover-alt', label: 'Descrição da imagem', status: 'ok', detail: `${coverAlt.length} caracteres.` },
+
+    headings < 2
+      ? { id: 'headings', label: 'Subtítulos', status: 'pending', detail: `${headings} encontrado${headings === 1 ? '' : 's'}. Use ## para dividir o texto em respostas.` }
+      : { id: 'headings', label: 'Subtítulos', status: 'ok', detail: `${headings} subtítulos no conteúdo.` },
+
+    hasSources
+      ? { id: 'sources', label: 'Fontes', status: 'ok', detail: 'O conteúdo cita ao menos um link externo.' }
+      : { id: 'sources', label: 'Fontes', status: 'pending', detail: 'Sem links externos. Ao citar dados de saúde, aponte a fonte e confira a data.' },
+  ];
+
+  return { items, done: items.filter((item) => item.status === 'ok').length, total: items.length };
+}
+
 /** @param {string} value */
 export function isHttpsUrl(value) {
   try {

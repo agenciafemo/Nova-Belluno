@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getEditorialFeedback, isHttpsUrl } from '../src/lib/editorial.mjs';
+import { getEditorialFeedback, getSeoChecklist, isHttpsUrl } from '../src/lib/editorial.mjs';
 
 const article = {
   title: 'Como conhecer um residencial geriátrico com calma',
@@ -40,4 +40,47 @@ test('valida URL HTTPS e rejeita credenciais e URLs relativas a outro host', () 
 test('a prévia usa os campos SEO, com fallback para o título e resumo', () => {
   assert.equal(getEditorialFeedback(article).title, article.title);
   assert.equal(getEditorialFeedback({ ...article, seoTitle: 'Título SEO específico para o artigo' }).title, 'Título SEO específico para o artigo');
+});
+
+const estado = (entrada) => Object.fromEntries(
+  getSeoChecklist({ ...article, ...entrada }).items.map((item) => [item.id, item.status]),
+);
+
+test('a nota de SEO aponta os campos que ficaram vazios', () => {
+  const resultado = getSeoChecklist(article);
+  const estados = Object.fromEntries(resultado.items.map((item) => [item.id, item.status]));
+
+  assert.equal(estados['seo-title'], 'pending');
+  assert.equal(estados['seo-description'], 'pending');
+  assert.equal(estados.tags, 'pending');
+  assert.equal(estados.sources, 'pending');
+  assert.equal(resultado.done, 2);
+  assert.equal(resultado.total, 6);
+});
+
+test('campos preenchidos dentro da faixa recomendada ficam concluídos', () => {
+  const estados = estado({
+    seoTitle: 'Como escolher um residencial geriátrico com calma e segurança',
+    seoDescription: 'Um roteiro prático para a família avaliar ambientes, equipe, rotina e comunicação antes de escolher um residencial geriátrico para a pessoa idosa.',
+    tags: ['residencial geriátrico', 'família'],
+  });
+
+  assert.equal(estados['seo-title'], 'ok');
+  assert.equal(estados['seo-description'], 'ok');
+  assert.equal(estados.tags, 'ok');
+});
+
+test('comprimento fora da faixa vira atenção, não pendência', () => {
+  const estados = estado({ seoTitle: 'Título curto', seoDescription: 'Descrição curta demais para a busca.' });
+
+  assert.equal(estados['seo-title'], 'attention');
+  assert.equal(estados['seo-description'], 'attention');
+});
+
+test('nenhum item da nota de SEO impede a publicação', () => {
+  assert.deepEqual(getEditorialFeedback({ ...article, tags: [], seoTitle: '', seoDescription: '' }).errors, []);
+});
+
+test('palavras-chave em branco não contam como preenchidas', () => {
+  assert.equal(estado({ tags: ['  ', ''] }).tags, 'pending');
 });

@@ -76,6 +76,9 @@ const adminEmail = import.meta.env.PUBLIC_SUPABASE_ADMIN_EMAIL ?? '';
             estar configurado na hospedagem.
           </p>
 
+          <div class="admin-editor__layout">
+          <div class="admin-editor__main">
+
           <div class="admin-field admin-field--wide">
             <label for="post-title">Título</label>
             <input id="post-title" name="title" minlength="10" maxlength="120" required>
@@ -163,6 +166,15 @@ const adminEmail = import.meta.env.PUBLIC_SUPABASE_ADMIN_EMAIL ?? '';
             </select>
           </div>
 
+          <div class="admin-field admin-field--wide" id="admin-schedule-field" hidden>
+            <label for="post-published-at">Data de publicação</label>
+            <input id="post-published-at" name="published_at" type="datetime-local">
+            <small id="admin-schedule-hint">
+              Deixe vazio para publicar com a data de hoje. Uma data futura agenda
+              o artigo: ele fica invisível no site até lá.
+            </small>
+          </div>
+
           <div class="admin-field admin-field--wide">
             <label for="post-seo-description">Descrição SEO</label>
             <textarea id="post-seo-description" name="seo_description" rows="3" maxlength="180"></textarea>
@@ -183,16 +195,33 @@ const adminEmail = import.meta.env.PUBLIC_SUPABASE_ADMIN_EMAIL ?? '';
             <small>Simulação: Google e outros buscadores podem exibir títulos e descrições diferentes.</small>
           </section>
 
-          <section class="admin-editorial-guidance" aria-labelledby="editorial-guidance-heading">
-            <h3 id="editorial-guidance-heading">Revisão editorial e técnica</h3>
-            <ul id="editorial-checklist"></ul>
-            <p>Confira ortografia, autoria, serviços disponíveis em cada unidade e fontes. Conteúdos de saúde devem passar por revisão profissional. Não repita palavras-chave artificialmente nem acrescente informações ocultas que contradigam o texto.</p>
-            <p>O site gera automaticamente datas, idioma, dados do artigo, breadcrumbs, compartilhamento, sitemap e RSS. Essas informações auxiliam os buscadores, mas não garantem indexação ou citações por IA.</p>
-          </section>
-
           <div class="admin-editor__footer">
             <label class="admin-check"><input id="post-featured" name="featured" type="checkbox"> Destacar no blog</label>
             <button type="submit" id="admin-save-post">Salvar artigo</button>
+          </div>
+
+          </div>
+
+          <aside class="admin-editor__side" aria-labelledby="seo-check-heading">
+            <div class="admin-editor__side-inner">
+              <div class="admin-seo-check__score-box">
+                <div class="admin-seo-check__ring" id="seo-check-ring"><span id="seo-check-value">0%</span></div>
+                <div>
+                  <h3 id="seo-check-heading">Nota de SEO</h3>
+                  <p class="admin-seo-check__sub" id="seo-check-score" role="status" aria-live="polite">Atualiza enquanto você escreve</p>
+                </div>
+              </div>
+
+              <ul class="admin-seo-check__blockers" id="editorial-checklist" hidden></ul>
+              <ul class="admin-seo-check__list" id="seo-checklist"></ul>
+
+              <p class="admin-seo-check__note">
+                Nenhum item desta lista impede a publicação: o site preenche o que
+                faltar. Conteúdos de saúde ainda precisam de revisão profissional.
+              </p>
+            </div>
+          </aside>
+
           </div>
         </form>
       </div>

@@ -10,6 +10,7 @@ try {
 }
 
 const token = process.env.INSTAGRAM_ACCESS_TOKEN;
+const accountId = process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID;
 const apiVersion = process.env.INSTAGRAM_API_VERSION || 'v26.0';
 const postCount = 6;
 const imageDirectory = path.resolve('src/assets/instagram');
@@ -23,6 +24,15 @@ if (!token) {
   process.exit(0);
 }
 
+/* Duas rotas da Meta atendem este grid e a diferença aparece no prefixo do
+   token. Um token de usuário do Instagram começa com IGAA, vale 60 dias e
+   fala com graph.instagram.com. Um token de usuário do sistema começa com EAA,
+   não expira e fala com graph.facebook.com. Detectar pelo prefixo permite
+   trocar de uma rota para a outra alterando apenas o valor da variável de
+   ambiente, sem mudar código nem coordenar um deploy. */
+const usesInstagramLogin = token.startsWith('IGAA');
+const apiHost = usesInstagramLogin ? 'graph.instagram.com' : 'graph.facebook.com';
+
 /* A miniatura de um Reel só existe em thumbnail_url; media_url devolve o MP4.
    Álbuns expõem a primeira imagem em media_url, que é o que o grid mostra. */
 const supportedTypes = new Set(['IMAGE', 'VIDEO', 'CAROUSEL_ALBUM']);
@@ -34,7 +44,7 @@ const allowedContentTypes = new Map([
 ]);
 
 async function requestGraph(endpoint, fields) {
-  const url = new URL(`https://graph.instagram.com/${apiVersion}/${endpoint}`);
+  const url = new URL(`https://${apiHost}/${apiVersion}/${endpoint}`);
   url.searchParams.set('fields', fields);
   url.searchParams.set('access_token', token);
 
@@ -48,7 +58,9 @@ async function requestGraph(endpoint, fields) {
     if (payload?.error?.code === 190) {
       throw new Error(
         `[sync:instagram] Token recusado pela Meta (${detail}). ` +
-        'Gere um novo com "npm run instagram:refresh" e atualize INSTAGRAM_ACCESS_TOKEN.',
+        (usesInstagramLogin
+          ? 'Gere um novo com "npm run instagram:refresh" e atualize INSTAGRAM_ACCESS_TOKEN.'
+          : 'Verifique se o usuário do sistema ainda tem acesso à Página no Meta Business.'),
       );
     }
     throw new Error(`[sync:instagram] Falha ao consultar a Graph API: ${detail}`);
@@ -107,9 +119,35 @@ async function isBlankImage(bytes) {
   }
 }
 
-const profile = await requestGraph('me', 'username,name,profile_picture_url');
+/* Na rota do Instagram o token já aponta para a conta. Na rota do Facebook ele
+   representa o usuário do sistema, que pode administrar várias Páginas, então
+   é preciso chegar à conta profissional ligada à Página. */
+async function resolveAccountNode() {
+  if (usesInstagramLogin) return 'me';
+  if (accountId) return accountId;
+
+  const pages = await requestGraph('me/accounts', 'name,instagram_business_account{id,username}');
+  const linked = (pages.data ?? []).find((page) => page.instagram_business_account?.id);
+
+  if (!linked) {
+    throw new Error(
+      '[sync:instagram] Nenhuma Página do usuário do sistema tem conta profissional do ' +
+      'Instagram vinculada. Confira os ativos atribuídos no Meta Business.',
+    );
+  }
+
+  const found = linked.instagram_business_account;
+  console.log(
+    `[sync:instagram] Conta @${found.username} descoberta pela Página “${linked.name}”. ` +
+    `Defina INSTAGRAM_BUSINESS_ACCOUNT_ID=${found.id} para evitar esta consulta a cada build.`,
+  );
+  return found.id;
+}
+
+const accountNode = await resolveAccountNode();
+const profile = await requestGraph(accountNode, 'username,name,profile_picture_url');
 const feed = await requestGraph(
-  'me/media',
+  `${accountNode}/media`,
   'id,caption,media_type,media_url,permalink,thumbnail_url,timestamp',
 );
 

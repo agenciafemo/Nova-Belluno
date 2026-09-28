@@ -9,3 +9,4 @@ import '../../js/about-carousel.js';
 import '../../js/services-carousel.js';
 import '../../js/google-reviews.js';
 import '../../js/location-popup.js';
+import './video-player.ts';
