@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/webmail",
+      "destination": "https://webmail.novabelluno.com.br",
+      "permanent": false
+    },
+    {
+      "source": "/webmail/:path*",
+      "destination": "https://webmail.novabelluno.com.br",
+      "permanent": false
+    }
+  ]
+}
