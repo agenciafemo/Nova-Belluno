@@ -36,7 +36,12 @@ try {
 }
 
 const files = await walk(dist);
-const htmlFiles = files.filter((file) => file.endsWith('.html'));
+
+/* Arquivos de verificação de propriedade (Google Search Console, Bing) terminam
+   em .html mas não são páginas: não têm título, descrição nem H1, e cobrá-los
+   quebraria a auditoria sem indicar problema real. */
+const isVerificationFile = (file) => /(^|[\\/])(google[0-9a-f]{16}|BingSiteAuth)\.html$/i.test(file);
+const htmlFiles = files.filter((file) => file.endsWith('.html') && !isVerificationFile(file));
 
 for (const file of htmlFiles) {
   const html = await readFile(file, 'utf8');
