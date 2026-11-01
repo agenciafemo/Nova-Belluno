@@ -20,13 +20,13 @@
     "verify": "npm run test && npm run check && npm run build && npm run audit:build"
   },
   "dependencies": {
-    "@astrojs/sitemap": "3.7.3",
+    "@astrojs/sitemap": "3.7.4",
     "@mux/mux-player": "3.13.4",
     "@supabase/supabase-js": "2.112.4",
-    "astro": "7.2.4"
+    "astro": "7.4.4"
   },
   "devDependencies": {
-    "@astrojs/check": "0.9.10",
+    "@astrojs/check": "0.9.12",
     "sharp": "0.35.3",
     "typescript": "6.0.3"
   }
